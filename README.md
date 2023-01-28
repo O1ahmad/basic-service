@@ -4,7 +4,7 @@
 
 # Ansible Role 🔗 Base-Service
 
-Configure and operate a base service: running anything from cypto blockchain clients to the vast list of cloud-native services
+Configure and operate a base service: running anything from cypto blockchain clients to the vast array of cloud-native services
 
 ## Requirements
 

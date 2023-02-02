@@ -1,0 +1,21 @@
+{{ range $roleName, $roleValue := $.Values.serviceRoles }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{template "basic-service.name" $}}-{{$roleName}}-role-binding
+  namespace: {{ $roleValue.namespace | default $.Values.namespace }}
+  labels:
+    app: {{template "basic-service.name" $}}
+    {{- if $.Values.labels }}
+    {{- include "basic-service.labels" $ | indent 4}}
+    {{- end }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $roleValue.serviceAccount | default $.Values.serviceAccountName }}
+    namespace: {{$.Values.namespace}}
+roleRef:
+  kind: Role
+  name: {{template "basic-service.name" $}}-{{$roleName}}-role
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

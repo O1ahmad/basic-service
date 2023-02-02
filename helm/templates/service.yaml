@@ -1,0 +1,49 @@
+{{- if and .Values.serviceTargetPort .Values.servicePort }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{template "basic-service.name" .}}-svc
+  namespace: {{.Values.namespace}}
+  labels:
+    app: {{template "basic-service.name" .}}
+    {{- if .Values.labels }}
+    {{- include "basic-service.labels" $ | indent 4}}
+    {{- end }}
+spec:
+  type: {{.Values.serviceType}}
+  ports:
+  - name: tcp-{{template "basic-service.name" .}}
+    port: {{.Values.servicePort}}
+    targetPort: {{.Values.serviceTargetPort}}
+    protocol: TCP
+  {{- range $routeName, $routeValue := $.Values.ingressRoutes }}
+  - name: {{$routeName}}
+    port: {{tpl $routeValue.targetPort $}}
+    targetPort: {{tpl $routeValue.targetPort $}}
+    protocol: TCP
+  {{- end }}
+  selector:
+    app: {{template "basic-service.name" .}}
+{{- end}}
+---
+{{- if and .Values.grpcServicePort .Values.grpcServiceTargetPort }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-{{template "basic-service.name" .}}-svc
+  namespace: {{.Values.namespace}}
+  labels:
+    app: {{template "basic-service.name" .}}
+    {{- if .Values.labels }}
+    {{- include "basic-service.labels" $ | indent 4}}
+    {{- end }}
+spec:
+  type: {{.Values.serviceType}}
+  ports:
+  - name: grpc-{{template "basic-service.name" .}}
+    port: {{.Values.grpcServicePort}}
+    targetPort: {{.Values.grpcServiceTargetPort}}
+    protocol: TCP
+  selector:
+    app: {{template "basic-service.name" .}}
+{{- end}}

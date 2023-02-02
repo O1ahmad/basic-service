@@ -1,0 +1,15 @@
+{{ range $roleName, $roleValue := $.Values.serviceRoles }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{template "basic-service.name" $}}-{{$roleName}}-role
+  namespace: {{ $roleValue.namespace | default $.Values.namespace }}
+  labels:
+    app: {{template "basic-service.name" $}}
+    {{- if $.Values.labels }}
+    {{- include "basic-service.labels" $ | indent 4}}
+    {{- end }}
+rules:
+{{- toYaml $roleValue.apiGroups | nindent 2 }}
+{{- end }}

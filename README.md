@@ -4,13 +4,13 @@
 
 # Ansible Role 🔗 Basic-Service
 
-Configure and operate a basic service: running anything from cypto blockchain clients to the vast array of cloud-native services
+Configure and operate a basic cloud-native service: running anything from cypto blockchain clients to the vast array of Apache, CNCF and beyond services.
 
 ## Requirements
 
 [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (for Python 2.6 support, use the deprecated `docker-py` library instead) or installation of the `docker` engine.
 
-## Role Variables
+## Vars
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |

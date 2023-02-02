@@ -2,9 +2,12 @@
 
 <p><img src="https://code.benco.io/icon-collection/logos/ansible.svg" alt="ansible logo" title="ansible" align="left" height="60" /></p>
 
-# Ansible Role 🔗 Basic-Service
+# Ansible Role :robot: Basic-Service
+[![Galaxy Role](https://img.shields.io/ansible/role/61415.svg)](https://galaxy.ansible.com/0x0I/basic_service)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/0x0I/basic-service?color=yellow)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-Configure and operate a basic cloud-native service: running anything from cypto blockchain clients to the vast array of Apache, CNCF and beyond services.
+Configure and operate a basic cloud-native service: running anything from cypto blockchain clients to the immense app store of open-source ([Apache](https://projects.apache.org/projects.html), [CNCF](https://landscape.cncf.io/card-mode?project=hosted&grouping=no) and beyond) services.
 
 ## Requirements
 
@@ -27,6 +30,11 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 |     _cpus_      |  available CPU resources each deployed component can use   |      `1.0`       |
 |    _memory_     | available memory resources each deployed component can use |       `4g`       |
 |   _uninstall_   |    whether to remove installed components and artifacts    |     `false`      |
+
+## Containerized Apps
+- [O1 Containers](https://github.com/0x0I/containers)
+- [Dockerhub](https://hub.docker.com/search?q=)
+- [Quay.io](https://quay.io/search)
 
 ## Dependencies
 

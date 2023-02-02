@@ -19,7 +19,7 @@
 - name: Generate local rendering of service config files
   copy:
     content: "{{ item.value.data }}"
-    dest: "{{ item.value.destinationPath }}"
+    dest: "{{ workDir }}/{{ item.value.destinationPath }}"
   with_dict: "{{ config }}"
 
 - set_fact:

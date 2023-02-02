@@ -2,9 +2,9 @@
 
 <p><img src="https://code.benco.io/icon-collection/logos/ansible.svg" alt="ansible logo" title="ansible" align="left" height="60" /></p>
 
-# Ansible Role 🔗 Base-Service
+# Ansible Role 🔗 Basic-Service
 
-Configure and operate a base service: running anything from cypto blockchain clients to the vast array of cloud-native services
+Configure and operate a basic service: running anything from cypto blockchain clients to the vast array of cloud-native services
 
 ## Requirements
 
@@ -45,7 +45,7 @@ collections:
 - Launch a container that sleeps for infinity:
 
 ```
-  - role: o1labs.cloud.base-service
+  - role: o1labs.basic-service
     vars:
       name: sleepy-service
       image: busybox:latest

@@ -1,0 +1,118 @@
+{{- if not .Values.disableCreateMTLSKeystore}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{template "basic-service.name" .}}-keystore
+  namespace: {{.Values.namespace}}
+  annotations:
+    harness.io/skip-versioning: "true"
+  labels:
+    app: {{template "basic-service.name" .}}
+    {{- if .Values.labels }}
+    {{- include "basic-service.labels" $ | indent 4}}
+    {{- end }}
+spec:
+  secretName: {{template "basic-service.name" .}}-keystore
+  commonName: {{template "basic-service.commonName" .}}
+  dnsNames:
+  - {{template "basic-service.commonName" .}}
+  issuerRef:
+    name: vault-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  keystores:
+    pkcs12:
+      create: true
+      passwordSecretRef: # Password used to encrypt the keystore
+        key: CLIENT_PKCS12_PASSWORD
+        name: {{template "basic-service.name" .}}-secrets
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{template "basic-service.name" .}}-ingress-cert
+  namespace: istio-system
+  annotations:
+    harness.io/skip-versioning: "true"
+spec:
+  secretName: {{template "basic-service.name" .}}-ingress-cert
+  commonName: {{template "basic-service.commonName" .}}
+  dnsNames:
+  - {{template "basic-service.commonName" .}}
+  {{- range $common_name := .Values.extraCommonNames }}
+  - {{ tpl $common_name $}}
+  {{- end }}
+  issuerRef:
+    name: vault-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: v1
+data:
+  cacert: {{ include "returnCACertificates" .Values.mTLSCACertificates | b64enc }}
+kind: Secret
+metadata:
+  name: {{template "basic-service.name" .}}-ingress-cert-cacert
+  namespace: istio-system
+  annotations:
+    harness.io/skip-versioning: "true"
+type: Opaque
+---
+{{- end}}
+{{- if and .Values.grpcServicePort .Values.grpcServiceTargetPort .Values.grpcCommonName}}
+apiVersion: v1
+data:
+  cacert: {{ include "returnCACertificates" .Values.mTLSCACertificates | b64enc }}
+kind: Secret
+metadata:
+  name: grpc-{{template "basic-service.name" .}}-ingress-cert-cacert
+  namespace: istio-system
+  annotations:
+    harness.io/skip-versioning: "true"
+type: Opaque
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grpc-{{template "basic-service.name" .}}-ingress-cert
+  namespace: istio-system
+spec:
+  secretName: grpc-{{template "basic-service.name" .}}-ingress-cert
+  commonName: {{.Values.grpcCommonName}}
+  dnsNames:
+  - {{template "basic-service.commonName" .}}
+  - {{.Values.grpcCommonName}}
+  issuerRef:
+    name: vault-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+{{- end}}
+---
+
+{{- if .Values.externalRoutes }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "{{template "basic-service.name" .}}-client-cert"
+  namespace: "{{.Values.namespace}}"
+spec:
+  secretName: "{{template "basic-service.name" .}}-client-cert"
+  commonName: "{{template "basic-service.commonName" .}}"
+  dnsNames:
+    - {{template "basic-service.commonName" .}}
+  issuerRef:
+    name: vault-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{template "basic-service.name" .}}-client-cacert
+  namespace: "{{.Values.namespace}}"
+  annotations:
+    harness.io/skip-versioning: "true"
+data:
+  cacert: {{ include "returnCACertificates" .Values.mTLSCACertificates | b64enc }}
+type: Opaque
+{{- end}}

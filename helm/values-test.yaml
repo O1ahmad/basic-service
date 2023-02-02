@@ -1,0 +1,152 @@
+id: 1
+name: foo-service-{{.Values.id}}
+environment: t-foo
+clusterName: t-foo-test-eks-use1-cluster
+common_name: foo-service-{{.Values.id}}.t-foo-test.use1.eks.gem.link
+namespace: foo
+createNamespace: true
+tlsMode: SIMPLE
+keystoreServicePathOverride: foo-service
+
+image: jenkins-docker.artifactory.m-devprod-prod.use1.eks.gem.link/foo-service:${artifact.metadata.tag}
+command: ['sleep']
+args: ['infinity']
+
+dockercfg: ${artifact.source.dockerconfig}
+
+serviceType: ClusterIP
+servicePort: 9001
+serviceTargetPort: 9001
+healthCheckEndpoint: /test
+
+minReplicas: 1
+maxReplicas: 1
+
+disableCreateMTLSKeystore: false
+
+initContainers:
+  example-inita:
+  - name: example-init
+    image: busybox:latest
+    command: ['sh', '-c', 'echo hello']
+
+extraContainers:
+  example-container:
+  - name: watch-container
+    image: busybox:latest
+    command: ['sh', '-c', 'watch ls /tmp']
+
+extraVolumes:
+  example-volume:
+  - name: empty-example
+    emptyDir: {}
+
+volumesFromConfigMaps:
+  cm-volume:
+    configMapName: example-config
+
+extraVolumeMounts:
+  empty-mount:
+  - name: empty-example
+    mountPath: /tmp
+  cm-mount:
+  - name: cm-volume
+    mountPath: /var/tmp
+
+labels:
+  test-label: "this is a test"
+
+annotations:
+  test-annotation/test-{{.Values.id}}: test-annotation-{{.Values.id}}
+
+env:
+  config:
+    ENV_SPECIFIC_VAR: 'foo-test'
+    VAR_TEST: "{{.Values.id}}-env-var"
+
+configMaps:
+  example-config:
+    file: config.toml
+    data: |
+      a=1
+      [section]
+      b=2
+
+ingressRoutes:
+  example-ingress-route:
+    ingressPort: "444"
+    targetPort: "9002"
+    protocol: HTTPS
+    tlsMode: SIMPLE
+
+externalRoutes:
+  example-external-service:
+    destinationName: example-external-service.t-cluster-test.use1.eks.gem.link
+    hosts:
+    - "external-service.t-cluster-test.*"
+
+serviceRoles:
+  example:
+    serviceAccount: example-svc-account
+    apiGroups:
+    - apiGroups:
+      - ""
+      - apps
+    resources:
+    - pods
+    verbs:
+    - create
+  custom-ns-example:
+    namespace: custom-namespace
+    apiGroups:
+    - apiGroups:
+      - cert-manager.io
+      resources:
+      - certificates
+      verbs:
+      - list
+
+includePodName: true
+deployStatefulSet: false
+pvcName: ebs
+pvcStorageClass: gp3-ext4
+pvcStorageCapacity: 1Gi
+
+deployStategy:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+
+storageClass:
+- create: true
+  name: efs-sc
+  provisioner: efs.csi.aws.com
+
+persistentVolumeClaim:
+- name: mount1
+  accessModes: ReadWriteMany
+  storage: 10Gi
+  storageClassName: efs-sc
+  mountPath: /mount1
+- name: mount2
+  accessModes: ReadWriteMany
+  storage: 11Gi
+  storageClassName: efs-sc
+  mountPath: /mount2
+
+persistentVolume:
+- name: mount1
+  storage: 10Gi
+  accessModes: ReadWriteMany
+  reclaimPolicy: Retain
+  driver: efs.csi.aws.com
+  volumeHandle: "fs-123456789"
+  subPath: "mount1"
+- name: mount2
+  storage: 11Gi
+  accessModes: ReadWriteMany
+  reclaimPolicy: Retain
+  driver: efs.csi.aws.com
+  volumeHandle: "fs-123456789"
+  subPath: "mount2"

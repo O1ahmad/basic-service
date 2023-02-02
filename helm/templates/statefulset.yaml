@@ -1,0 +1,170 @@
+{{- if .Values.deployStatefulSet}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{template "basic-service.name" .}}-sts
+  namespace: {{.Values.namespace}}
+spec:
+  replicas: {{int .Values.minReplicas}}
+  serviceName: {{template "basic-service.name" .}}-svc
+  selector:
+    matchLabels:
+      app: {{template "basic-service.name" .}}
+  {{- if .Values.deployStrategy }}
+    {{- toYaml .Values.deployStrategy | nindent 2 }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{template "basic-service.name" .}}
+        {{- if .Values.labels }}
+          {{- include "basic-service.labels" $ | indent 8}}
+        {{- end }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        {{- if $.Values.externalRoutes }}
+        sidecar.istio.io/userVolumeMount: '[{"name":"client-cert", "mountPath":"/etc/client-certs", "readonly":true}, {"name":"client-cacert", "mountPath":"/etc/client-ca", "readonly":true}]'
+        sidecar.istio.io/userVolume: '[{"name":"client-cert", "secret":{"secretName":"{{template "basic-service.name" .}}-client-cert"}}, {"name":"client-cacert", "secret":{"secretName":"{{template "basic-service.name" .}}-client-cacert"}}]'
+        {{- end }}
+        {{- if .Values.annotations}}
+        {{ tpl (toYaml .Values.annotations) .}}
+        {{- end }}
+    spec:
+      {{- if .Values.dockercfg}}
+      imagePullSecrets:
+      - name: {{template "basic-service.name" .}}-dockercfg
+      {{- end}}
+      volumes:
+      {{- if not .Values.disableCreateMTLSKeystore }}
+        - name: {{template "basic-service.name" .}}-keystore
+          secret:
+            secretName: {{template "basic-service.name" .}}-keystore
+      {{- end}}
+      {{ range $.Values.base64DecodedSecretVolumes }}
+        - name: {{.name}}-volume
+          secret:
+            secretName: {{.name}}-secret
+            items:
+              - key: decoded
+                path: {{.mount.file}}
+      {{- end}}
+      {{- if .Values.extraVolumes }}
+        {{ toYaml .Values.extraVolumes | nindent 8 }}
+      {{- end }}
+      {{- range  $volumeName, $volumeValue := .Values.volumesFromConfigMaps }}
+        - name: {{$volumeName}}
+          configMap:
+            name: {{template "basic-service.name" $}}-{{$volumeValue.configMapName}}
+      {{- end }}
+      {{- if .Values.serviceAccountName }}
+      serviceAccountName: {{.Values.serviceAccountName }}
+      {{- end }}
+      {{- if .Values.initContainers }}
+      initContainers:
+        {{- toYaml .Values.initContainers | nindent 6 }}
+      {{- end }}
+      containers:
+      {{- if .Values.extraContainers }}
+        {{- range  $containerName, $containerValue := .Values.extraContainers }}
+          {{- tpl (toYaml $containerValue) $ | nindent 6}}
+        {{- end }}
+      {{- end }}
+      - name: {{template "basic-service.name" .}}
+        image: {{.Values.image}}
+        {{- if .Values.command }}
+        command: {{ toYaml .Values.command | nindent 8 }}
+        {{- end }}
+        {{- if .Values.args }}
+        args: {{ toYaml .Values.args | nindent 8 }}
+        {{- end }}
+        resources:
+          requests:
+            memory: {{ .Values.memoryRequests | default "2Gi" | quote }}
+            cpu: {{ .Values.cpuRequests | default "2000m" | quote }}
+          limits:
+            memory: {{ .Values.memoryLimits | default "4Gi" | quote }}
+        {{- if and .Values.servicePort .Values.healthCheckEndpoint }}
+        livenessProbe:
+          httpGet:
+            path: {{.Values.healthCheckEndpoint}}
+            port: {{.Values.servicePort}}
+          initialDelaySeconds: 30
+          periodSeconds: 20
+        livenessProbe:
+          tcpSocket:
+            port: {{.Values.servicePort}}
+          initialDelaySeconds: 30
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: {{.Values.healthCheckEndpoint}}
+            port: {{.Values.servicePort}}
+          initialDelaySeconds: 30
+          periodSeconds: 20
+        startupProbe:
+          httpGet:
+            path: {{.Values.healthCheckEndpoint}}
+            port: {{.Values.servicePort}}
+          failureThreshold: 10
+          periodSeconds: 10
+        {{- end}}
+        volumeMounts:
+        {{- if not .Values.disableCreateMTLSKeystore }}
+          - mountPath: /mnt
+            name: {{template "basic-service.name" .}}-keystore
+            readOnly: true
+        {{- end}}
+        {{- range $.Values.base64DecodedSecretVolumes }}
+          - name: {{.name}}-volume
+            mountPath: {{.mount.path}}/{{.mount.file}}
+            subPath: {{.mount.file}}
+            readOnly: true
+        {{- end}}
+        {{- if .Values.deployStatefulSet }}
+          - mountPath: {{.Values.statefulSetOptions.pvcMountPath}}
+            name: {{ tpl .Values.statefulSetOptions.pvcName .}}
+        {{- end }}
+        {{- range  $mountName, $mountValue := .Values.extraVolumeMounts }}
+          {{- toYaml $mountValue | nindent 10}}
+        {{- end }}
+        env:
+        - name: DD_AGENT_HOST
+          value: {{.Values.ddAgentHost | default "datadog-agent.datadog.svc.cluster.local" | quote}}
+        - name: DD_ENV
+          value: {{.Values.environment | quote}}
+        - name: DD_SERVICE
+          value: "{{template "basic-service.name" .}}"
+        - name: DD_VERSION
+          value: {{ (split ":" .Values.image)._1 | default "v0.0.0" | quote }}
+        - name: DD_TRACE_AGENT_URL
+          value: {{.Values.ddTraceAgentUrl | default "http://datadog-agent.datadog.svc.cluster.local:8126" | quote}}
+        {{- if .Values.includePodName }}
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        {{- end}}
+        {{- if or .Values.env.config .Values.env.secrets}}
+        envFrom:
+        - secretRef:
+            name: {{template "basic-service.name" .}}-secrets
+        {{- if .Values.env.config}}
+        - configMapRef:
+            name: {{template "basic-service.name" .}}
+        {{- end}}
+        {{- if .Values.env.secrets}}
+        - secretRef:
+            name: {{template "basic-service.name" .}}
+        {{- end}}
+        {{- end}}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ tpl .Values.statefulSetOptions.pvcName .}}
+      spec:
+        accessModes:
+          - {{.Values.statefulSetOptions.pvcAccessMode}}
+        storageClassName: {{.Values.statefulSetOptions.pvcStorageClass}}
+        resources:
+          requests:
+            storage: {{.Values.statefulSetOptions.pvcStorageCapacity}}
+{{- end }}

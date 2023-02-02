@@ -10,7 +10,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 
 [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (for Python 2.6 support, use the deprecated `docker-py` library instead) or installation of the `docker` engine.
 
-## Vars
+## vars
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |

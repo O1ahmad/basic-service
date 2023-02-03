@@ -44,10 +44,10 @@ dataDirs: {}
 
 resources:
   cpuLimit: 1
-  memRequest: 1Gi
-  memLimit: 1Gi
+  memRequest: 1G
+  memLimit: 1G
 
-restart_policy: unless-stopped
+restartPolicy: unless-stopped
 uninstall: false
 
 # default container resources

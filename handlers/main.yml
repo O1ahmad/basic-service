@@ -9,7 +9,7 @@
 - name: Remove generated service config files
   become: true
   ansible.builtin.file:
-    path: "{{ workDir }}/{{ item.destinationPath | basename }}"
+    path: "{{ workDir }}/{{ item.value.destinationPath }}"
     state: absent
   with_dict: "{{ config }}"
   listen: Container uninstall

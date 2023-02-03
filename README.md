@@ -2,7 +2,7 @@
 
 <p><img src="https://code.benco.io/icon-collection/logos/ansible.svg" alt="ansible logo" title="ansible" align="left" height="60" /></p>
 
-# Ansible Role Basic-Service
+# Basic-Service
 [![Galaxy Role](https://img.shields.io/ansible/role/61415.svg)](https://galaxy.ansible.com/0x0I/basic_service)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/0x0I/basic-service?color=yellow)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)

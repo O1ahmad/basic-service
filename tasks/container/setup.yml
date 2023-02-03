@@ -12,29 +12,36 @@
 - name: Ensure existence of operations/work dir
   become: true
   file:
-    path: "{{ workDir }}"
+    path: "{{ workDir }}{{ item.value.destinationPath | dirname }}"
     state: directory
     mode: 0777
+  with_dict: "{{ config }}"
 
 - name: Generate local rendering of service config files
   copy:
     content: "{{ item.value.data }}"
     dest: "{{ workDir }}/{{ item.value.destinationPath }}"
+    mode: "{{ item.value.mode | default(644) }}"
   with_dict: "{{ config }}"
 
-- set_fact:
-    volumeList: |-
-      [
-      {% for conf in config %}
-        "{{ workDir }}/{{ conf[destinationPath] | basename}}:{{ conf[destinationPath] }}",
-      {% endfor %}
-      ]
-    portList: |-
-      [
-      {% for port in ports %}
-        "{{ port[ingressPort] }}:{{ port[servicePort] }}",
-      {% endfor %}
-      ]
+# Compile container resource lists
+
+- name: Determine service container volume list
+  set_fact:
+    volumeList: "{{ volumeList + [workDir + item.value.destinationPath + ':' + item.value.destinationPath] }}"
+  with_dict: "{{ config }}"
+
+- name: Add data DIRs to container volume list
+  set_fact:
+    volumeList: "{{ volumeList + [item.value.hostPath + ':' + item.value.appPath] }}"
+  with_dict: "{{ dataDirs }}"
+
+- name: Determine service container port list
+  set_fact:
+    portList: "{{ portList + [item.value.ingressPort|string + ':' + item.value.servicePort|string] }}"
+  with_dict: "{{ ports }}"
+
+# ---
 
 - name: Start service container
   community.docker.docker_container:

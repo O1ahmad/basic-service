@@ -1,6 +1,6 @@
 ---
 setupMode: container
-workDir: /O1
+workDir: /var/tmp
 
 command: ""
 ports: {}
@@ -20,15 +20,27 @@ config: {}
 #     c:
 #       d: 3
 # example-config2:
-#   destintionPath: /config/example-2.toml
+#   destinationPath: /config/example-2.toml
 #   data: |
 #     [a]
 #     b=1
 #     [c]
 #     d=2
+# example-entrypoint:
+#   destinationPath: /docker-entrypoint.d/example-entrypoint.sh
+#   mode: 0755
+#   data: |
+#     !/bin/bash
+#
+#     echo "Hello World!
 
 configEnv: {}
 # RUN_ARGS: --help
+
+dataDirs: {}
+# chain-data:
+#   hostPath: /mnt/data
+#   appPath: /app/data
 
 resources: {}
 # cpuLimit: 1
@@ -37,3 +49,7 @@ resources: {}
 
 restart_policy: unless-stopped
 uninstall: false
+
+# default container resources
+volumeList: []
+portList: []

@@ -1,5 +1,6 @@
 ---
 - name: Ensure existence of host data dir
+  when: hostDataDir is defined
   become: true
   file:
     path: "{{ hostDataDir }}"

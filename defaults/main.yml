@@ -42,10 +42,10 @@ dataDirs: {}
 #   hostPath: /mnt/data
 #   appPath: /app/data
 
-resources: {}
-# cpuLimit: 1
-# memRequest: 1Gi
-# memLimit: 1Gi
+resources:
+  cpuLimit: 1
+  memRequest: 1Gi
+  memLimit: 1Gi
 
 restart_policy: unless-stopped
 uninstall: false

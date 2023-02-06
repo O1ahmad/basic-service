@@ -9,21 +9,6 @@
     - name: End play following uninstallation
       meta: end_play
 
-- name: Ensure existence of operations/work dir
-  become: true
-  file:
-    path: "{{ workDir }}{{ item.value.destinationPath | dirname }}"
-    state: directory
-    mode: 0777
-  with_dict: "{{ config }}"
-
-- name: Generate local rendering of service config files
-  copy:
-    content: "{{ item.value.data }}"
-    dest: "{{ workDir }}/{{ item.value.destinationPath }}"
-    mode: "{{ item.value.mode | default(644) }}"
-  with_dict: "{{ config }}"
-
 # Compile container resource lists
 
 - name: Determine service container volume list
@@ -47,7 +32,8 @@
   community.docker.docker_container:
     name: "{{ name }}"
     image: "{{ image }}"
-    command: "{{ command }}"
+    user: "{{ user | default(omit) }}:{{ group | default(omit) }}"
+    command: "{{ command | default(omit) }}"
     env: "{{ configEnv }}"
     published_ports: "{{ portList }}"
     volumes: "{{ volumeList }}"

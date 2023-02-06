@@ -1,4 +1,7 @@
 ---
+# name: basic-service (for #systemd setup)
+# image: <insert-image-repo-path> (for #container setup)
+
 setupMode: container
 workDir: /var/tmp
 
@@ -50,6 +53,7 @@ resources:
 restartPolicy: unless-stopped
 uninstall: false
 
-# default container resources
+# default helper vars
 volumeList: []
 portList: []
+systemdEnvironmentDirective: ""

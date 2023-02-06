@@ -2,7 +2,7 @@
 - name: Ensure existence of host data dir
   when: hostDataDir is defined
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ hostDataDir }}"
     state: directory
     owner: "{{ ansible_user }}"
@@ -11,14 +11,14 @@
 
 - name: Ensure existence of operations/work dir
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ workDir }}{{ item.value.destinationPath | dirname }}"
     state: directory
     mode: 0777
   with_dict: "{{ config }}"
 
 - name: Generate local rendering of service config files
-  copy:
+  ansible.builtin.copy:
     content: "{{ item.value.data | default(omit) }}"
     dest: "{{ workDir }}/{{ item.value.destinationPath }}"
     mode: "{{ item.value.mode | default(644) }}"

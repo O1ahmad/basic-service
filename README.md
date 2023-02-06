@@ -29,6 +29,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 |    _dataDir_    | container directory to store node runtime/operational data |      `/tmp`      |
 |    _workDir_    |      operational directory to store runtime artifacts      |    `/var/tmp`    |
 | _restartPolicy_ |                  container restart policy                  | `unless-stopped` |
+|   _systemd_   |    Systemd deployment custom unit, service and install properties    |     `{}`      |
 |     _cpus_      |  available CPU resources each deployed service can use   |      `1.0`       |
 |    _memory_     | available memory resources each deployed service can use |       `4g`       |
 |   _uninstall_   |    whether to remove installed service and artifacts    |     `false`      |

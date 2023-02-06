@@ -1,0 +1,12 @@
+---
+# see for details: https://yamllint.readthedocs.io/en/stable/index.html
+extends: default
+ignore: |
+    .git/
+    .github/
+    helm/
+    test/
+rules:
+  line-length:
+    max: 120
+    level: warning

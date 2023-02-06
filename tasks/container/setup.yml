@@ -1,29 +1,30 @@
 ---
 - name: Uninstall provisioned container components
-  when: uninstall|bool == true
+  when: uninstall|bool
   block:
     - name: Broadcast uninstall signal
-      command: /bin/true
+      ansible.builtin.command: /bin/true
       notify: Container uninstall
+      changed_when: true
   always:
     - name: End play following uninstallation
-      meta: end_play
+      ansible.builtin.meta: end_play
 
 # Compile container resource lists
 
 - name: Determine service container volume list
-  set_fact:
+  ansible.builtin.set_fact:
     volumeList: "{{ volumeList + [workDir + item.value.destinationPath + ':' + item.value.destinationPath] }}"
   with_dict: "{{ config }}"
 
 - name: Add data DIRs to container volume list
-  set_fact:
+  ansible.builtin.set_fact:
     volumeList: "{{ volumeList + [item.value.hostPath + ':' + item.value.appPath] }}"
   with_dict: "{{ dataDirs }}"
 
 - name: Determine service container port list
-  set_fact:
-    portList: "{{ portList + [item.value.ingressPort|string + ':' + item.value.servicePort|string] }}"
+  ansible.builtin.set_fact:
+    portList: "{{ portList + [item.value.ingressPort | string + ':' + item.value.servicePort | string] }}"
   with_dict: "{{ ports }}"
 
 # ---

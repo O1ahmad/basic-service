@@ -51,6 +51,12 @@ resources:
   memLimit: 1G
 
 restartPolicy: unless-stopped
+
+systemd: {}
+# unit_properties: {}
+# service_properties: {}
+# install_properties: {}
+
 uninstall: false
 
 # default helper vars

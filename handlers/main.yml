@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: "{{ name }}"
     state: absent
-    purge_networks: yes
+    purge_networks: true
   listen: Container uninstall
 
 - name: Remove generated service config files

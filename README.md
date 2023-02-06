@@ -17,9 +17,11 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |
-|   _setupMode_   |           infrastructure provisioning setup mode           |   `container`    |
-|     _name_      |                 name of service to deploy                  |    `required`    |
-|     _image_     |             service container image to deploy              |    `required`    |
+|   _setupMode_   |  infrastructure provisioning setup mode (container, system)  |   `container`    |
+|     _name_      |                 name of service to deploy                  |    **required**    |
+|     _image_     |             service container image to deploy              |    **required**    |
+|     _command_     |             Command and arguments to execute on startup              |    **required**    |
+|     _user_     |             service container image to deploy              |    `root`    |
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |
 |   _configEnv_   |  environment variables to set within the service runtime   |       `{}`       |
 |     _ports_     |          listening port information for a service          |       `{}`       |
@@ -27,9 +29,10 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 |    _dataDir_    | container directory to store node runtime/operational data |      `/tmp`      |
 |    _workDir_    |      operational directory to store runtime artifacts      |    `/var/tmp`    |
 | _restartPolicy_ |                  container restart policy                  | `unless-stopped` |
-|     _cpus_      |  available CPU resources each deployed component can use   |      `1.0`       |
-|    _memory_     | available memory resources each deployed component can use |       `4g`       |
-|   _uninstall_   |    whether to remove installed components and artifacts    |     `false`      |
+|   _systemd_   |    Systemd deployment custom unit, service and install properties    |     `{}`      |
+|     _cpus_      |  available CPU resources each deployed service can use   |      `1.0`       |
+|    _memory_     | available memory resources each deployed service can use |       `4g`       |
+|   _uninstall_   |    whether to remove installed service and artifacts    |     `false`      |
 
 ## Containerized Apps
 - [O1 Containers](https://github.com/0x0I/containers)

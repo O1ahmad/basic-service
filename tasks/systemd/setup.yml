@@ -1,0 +1,37 @@
+---
+# Compile systemd unit settings
+
+- name: Determine service Environment directives
+  ansible.builtin.set_fact:
+    systemdEnvironmentDirective: "{{ systemdEnvironmentDirective + ' ' + item.key + '=' + item.value }}"
+  with_dict: "{{ configEnv }}"
+
+- name: Set default Sysetmd unit configurations
+  ansible.builtin.set_fact:
+    default_unit_info:
+      Wants: network-online.target
+      After: syslog.target network-online.target
+    default_unit_service:
+      ExecStart: "{{ command | default(name) }}"
+      User: "{{ user | default(omit) }}"
+      Group: "{{ group | default(user) | default(omit) }}"
+      Environment: "{{ systemdEnvironmentDirective }}"
+      CPUQuota: "{{ cpus }}"
+      MemoryHigh: "{{ memory }}"
+    default_unit_install:
+      WantedBy: multi-user.target
+    custom_unit_properties: "{{ systemd.unit_properties | default({}) }}"
+    custom_service_properties: "{{ systemd.service_properties | default({}) }}"
+    custom_install_properties: "{{ systemd.install_properties | default({}) }}"
+
+# ---
+
+- name: Start service systemd unit
+  ansible.builtin.include_role:
+    name: 0x0i.systemd
+  vars:
+    unit_config:
+      - name: "{{ name }}"
+        Unit: "{{ default_unit_info | combine(custom_unit_properties) }}"
+        Service: "{{ default_unit_service | combine(custom_service_properties) }}"
+        Install: "{{ default_unit_install | combine(custom_install_properties) }}"

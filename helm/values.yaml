@@ -80,7 +80,7 @@ externalRoutes: {}
 serviceRoles: {}
 # example-role:
 #   serviceAccount: example-svc-account
-#   apiGroups:
+#   rules:
 #   - apiGroups:
 #     - ""
 #     - apps

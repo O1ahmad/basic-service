@@ -4,5 +4,7 @@ kind: Namespace
 metadata:
   name: {{.Values.namespace}}
   labels:
-    istio-injection: enabled
+  {{- if .Values.labels }}
+    {{- include "basic-service.labels" $ | indent 4}}
+  {{- end }}
 {{- end}}

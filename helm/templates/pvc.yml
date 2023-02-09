@@ -1,15 +1,15 @@
-{{- range $key, $value := .Values.persistentVolumeClaim }}
+{{- range .Values.persistentVolumeClaim }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ $value.name }}-pvc
-  namespace: {{ $.Values.namespace }}
+  name: {{ .name }}-pvc
+  namespace: {{ .namespace }}
 spec:
     accessModes:
-        - {{ $value.accessModes }}
-    storageClassName: {{ $value.storageClassName | default "efs-sc" }}
+        - {{ .accessModes }}
+    storageClassName: {{ .storageClassName | default "efs-sc" }}
     resources:
         requests:
-          storage: {{ $value.storage }}
+          storage: {{ .storage }}
 {{- end }}

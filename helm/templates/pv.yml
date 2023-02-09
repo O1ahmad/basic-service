@@ -1,18 +1,15 @@
-{{- range $key, $value := .Values.persistentVolume }}
+{{- range .Values.persistentVolume }}
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ $value.name }}-pv
+  name: {{ .name }}-pv
 spec:
-    capacity:
-        storage: {{ $value.storage }}
-    volumeMode: Filesystem
-    accessModes:
-        - {{ $value.accessModes }}
-    storageClassName: {{ $value.storageClassName | default "efs-sc" }}
-    persistentVolumeReclaimPolicy: {{ $value.reclaimPolicy }}
-    csi:
-        driver: {{ $value.driver }}
-        volumeHandle: "{{ $value.volumeHandle }}:{{ $value.subPath }}"
+  capacity:
+    storage: {{ .storage }}
+  volumeMode: Filesystem
+  accessModes:
+    - {{ .accessModes }}
+  storageClassName: {{ .storageClassName | default "efs-sc" }}
+  persistentVolumeReclaimPolicy: {{ .reclaimPolicy }}
 {{- end }}

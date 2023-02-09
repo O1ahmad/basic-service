@@ -17,7 +17,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |
-|   _setupMode_   |  infrastructure provisioning setup mode (`container, systemd`)  |   `container`    |
+|   _setupMode_   |  infrastructure provisioning setup mode (`container, helm, systemd`)  |   `container`    |
 |     _name_      |                 name of service to deploy                  |    **required**    |
 |     _image_     |             service container image to deploy              |    **required**    |
 |     _command_     |             Command and arguments to execute on startup              |    **required**    |

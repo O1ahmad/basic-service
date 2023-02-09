@@ -4,3 +4,7 @@
 
 - name: Setup service infrastructure topology
   ansible.builtin.include_tasks: "{{ setupMode }}/setup.yml"
+
+- name: Manage networking and IP tables setup
+  when: setup_iptables|bool
+  ansible.builtin.include_tasks: "common/network-setup.yml"

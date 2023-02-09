@@ -1,0 +1,12 @@
+---
+- name: Determine service ingress port list for iptables config
+  ansible.builtin.set_fact:
+    ingressList: "{{ ingressList + [item.value.ingressPort | string] }}"
+  with_dict: "{{ ports }}"
+
+- name: Allow service ingress ports in iptables setup
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_ports: "{{ ingressList }}"
+    jump: ACCEPT

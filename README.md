@@ -25,6 +25,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |
 |   _configEnv_   |  environment variables to set within the service runtime   |       `{}`       |
 |     _ports_     |          listening port information for a service          |       `{}`       |
+|     _setup_iptables_     |          configure IP tables to allow ingress paths          |       `false`       |
 |  _hostDataDir_  |   host directory to store node runtime/operational data    |    `/var/tmp`    |
 |    _dataDir_    | container directory to store node runtime/operational data |      `/tmp`      |
 |    _workDir_    |      operational directory to store runtime artifacts      |    `/var/tmp`    |

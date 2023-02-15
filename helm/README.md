@@ -38,8 +38,6 @@ Helm chart that supports a basic, cloud-native containerized app in Kubernetes.
 | ingressRoutes | additional Istio ingress routes handled by the service  | `dict` | `{}` | no |
 | externalRoutes | Istio external routes for inter-cluster service communication | `dict` | `{}` | no |
 | serviceRoles | RBAC policies and associated service account bindings | `dict` | `{}` | no |
-| ddTraceAgentUrl | Full path of DataDog tracer | `string` | `http://datadog-agent.datadog.svc.cluster.local:8126` | no |
-| ddAgentHost | DataDog Agent/statsd host that the cluster agent listens on, used by Micrometer | `string` | `datadog-agent.datadog.svc.cluster.local` | no |
 | includePodName | Provides the name of the pod as "POD_NAME" env variable | `bool` | `false` | no |
 | deployStatefulSet | Whether to deploy a service as a k8s StatefulSet or standard Deployment workload | `bool` | `false` | no |
 | statefulSetOptions | volume claim and other options associated with StatefulSet deployments | `dict` | `{}` | no |

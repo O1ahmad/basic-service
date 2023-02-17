@@ -5,3 +5,5 @@ exclude_paths:
   - ../.github
   - ../helm/
   - ../test/
+warn_list:
+  - experimental

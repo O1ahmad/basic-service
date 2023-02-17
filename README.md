@@ -57,7 +57,7 @@ collections:
 - Launch a container that sleeps for infinity:
 
 ```
-  - role: o1labs.basic-service
+  - role: 0x0I.basic_service
     vars:
       name: sleepy-service
       image: busybox:latest

@@ -2,9 +2,9 @@ name: foo-service
 common_name: foo-service.foo.use1.eks.gem.link
 namespace: foo
 image: jenkins-docker.artifactory.m-devprod-prod.use1.eks.gem.link/foo-service:${artifact.metadata.tag}
-# command: []
-# args: []
-dockercfg: ${artifact.source.dockerconfig}
+command: []
+args: []
+dockercfg:
 
 # Set if service exposes ingress endpoints
 # serviceType: ClusterIP
@@ -15,12 +15,6 @@ dockercfg: ${artifact.source.dockerconfig}
 minReplicas: 1
 maxReplicas: 3
 createNamespace: true
-
-disableCreateMTLSKeystore: false
-
-mTLSCACertificates: "VaultCAs"
-# Include this if you need to enable Bastion mTLS access to a service
-#mTLSCACertificates: "VaultAndBastionCAs"
 
 env:
   config:
@@ -63,19 +57,6 @@ configMaps: {}
 #     a=1
 #     [section]
 #     b=2
-
-ingressRoutes: {}
-# example-ingress-route:
-#   ingressPort: "444"
-#   targetPort: "9002"
-#   protocol: HTTPS
-#   tlsMode: SIMPLE
-
-externalRoutes: {}
-# example-external-service:
-#   destinationName: example-external-service.d-cluster-dev.use1.eks.gem.link
-#   hosts:
-#   - "external-service.d-cluster-dev.*"
 
 serviceRoles: {}
 # example-role:

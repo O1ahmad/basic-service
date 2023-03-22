@@ -1,31 +1,26 @@
 id: 1
 name: foo-service-{{.Values.id}}
 environment: t-foo
-clusterName: t-foo-test-eks-use1-cluster
-common_name: foo-service-{{.Values.id}}.t-foo-test.use1.eks.gem.link
+clusterName: t-foo-test-eks-cluster
+common_name: foo-service-{{.Values.id}}.t-foo-test
 namespace: foo
 createNamespace: true
-tlsMode: SIMPLE
-keystoreServicePathOverride: foo-service
 
-image: jenkins-docker.artifactory.m-devprod-prod.use1.eks.gem.link/foo-service:${artifact.metadata.tag}
+image:
 command: ['sleep']
 args: ['infinity']
 
-dockercfg: ${artifact.source.dockerconfig}
+dockercfg:
 
 serviceType: ClusterIP
 servicePort: 9001
 serviceTargetPort: 9001
-healthCheckEndpoint: /test
 
 minReplicas: 1
 maxReplicas: 1
 
-disableCreateMTLSKeystore: false
-
 initContainers:
-  example-inita:
+  example-init-a:
   - name: example-init
     image: busybox:latest
     command: ['sh', '-c', 'echo hello']
@@ -72,19 +67,6 @@ configMaps:
       [section]
       b=2
 
-ingressRoutes:
-  example-ingress-route:
-    ingressPort: "444"
-    targetPort: "9002"
-    protocol: HTTPS
-    tlsMode: SIMPLE
-
-externalRoutes:
-  example-external-service:
-    destinationName: example-external-service.t-cluster-test.use1.eks.gem.link
-    hosts:
-    - "external-service.t-cluster-test.*"
-
 serviceRoles:
   example:
     serviceAccount: example-svc-account
@@ -106,7 +88,6 @@ serviceRoles:
       verbs:
       - list
 
-includePodName: true
 deployStatefulSet: false
 pvcName: ebs
 pvcStorageClass: gp3-ext4

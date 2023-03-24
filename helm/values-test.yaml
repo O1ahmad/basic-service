@@ -2,13 +2,13 @@ id: 1
 name: foo-service-{{.Values.id}}
 environment: t-foo
 clusterName: t-foo-test-eks-cluster
-common_name: foo-service-{{.Values.id}}.t-foo-test
+commonName: foo-service-{{.Values.id}}.t-foo-test
 namespace: foo
 createNamespace: true
 
 image:
-command: ['sleep']
-args: ['infinity']
+command: ["sleep"]
+args: ["infinity"]
 
 dockercfg:
 
@@ -21,20 +21,20 @@ maxReplicas: 1
 
 initContainers:
   example-init-a:
-  - name: example-init
-    image: busybox:latest
-    command: ['sh', '-c', 'echo hello']
+    - name: example-init
+      image: busybox:latest
+      command: ["sh", "-c", "echo hello"]
 
 extraContainers:
   example-container:
-  - name: watch-container
-    image: busybox:latest
-    command: ['sh', '-c', 'watch ls /tmp']
+    - name: watch-container
+      image: busybox:latest
+      command: ["sh", "-c", "watch ls /tmp"]
 
 extraVolumes:
   example-volume:
-  - name: empty-example
-    emptyDir: {}
+    - name: empty-example
+      emptyDir: {}
 
 volumesFromConfigMaps:
   cm-volume:
@@ -42,11 +42,11 @@ volumesFromConfigMaps:
 
 extraVolumeMounts:
   empty-mount:
-  - name: empty-example
-    mountPath: /tmp
+    - name: empty-example
+      mountPath: /tmp
   cm-mount:
-  - name: cm-volume
-    mountPath: /var/tmp
+    - name: cm-volume
+      mountPath: /var/tmp
 
 labels:
   test-label: "this is a test"
@@ -56,7 +56,7 @@ annotations:
 
 env:
   config:
-    ENV_SPECIFIC_VAR: 'foo-test'
+    ENV_SPECIFIC_VAR: "foo-test"
     VAR_TEST: "{{.Values.id}}-env-var"
 
 configMaps:
@@ -71,22 +71,22 @@ serviceRoles:
   example:
     serviceAccount: example-svc-account
     apiGroups:
-    - apiGroups:
-      - ""
-      - apps
+      - apiGroups:
+          - ""
+          - apps
     resources:
-    - pods
+      - pods
     verbs:
-    - create
+      - create
   custom-ns-example:
     namespace: custom-namespace
     apiGroups:
-    - apiGroups:
-      - cert-manager.io
-      resources:
-      - certificates
-      verbs:
-      - list
+      - apiGroups:
+          - cert-manager.io
+        resources:
+          - certificates
+        verbs:
+          - list
 
 deployStatefulSet: false
 pvcName: ebs
@@ -100,34 +100,34 @@ deployStategy:
       maxUnavailable: 1
 
 storageClass:
-- create: true
-  name: efs-sc
-  provisioner: efs.csi.aws.com
+  - create: true
+    name: efs-sc
+    provisioner: efs.csi.aws.com
 
 persistentVolumeClaim:
-- name: mount1
-  accessModes: ReadWriteMany
-  storage: 10Gi
-  storageClassName: efs-sc
-  mountPath: /mount1
-- name: mount2
-  accessModes: ReadWriteMany
-  storage: 11Gi
-  storageClassName: efs-sc
-  mountPath: /mount2
+  - name: mount1
+    accessModes: ReadWriteMany
+    storage: 10Gi
+    storageClassName: efs-sc
+    mountPath: /mount1
+  - name: mount2
+    accessModes: ReadWriteMany
+    storage: 11Gi
+    storageClassName: efs-sc
+    mountPath: /mount2
 
 persistentVolume:
-- name: mount1
-  storage: 10Gi
-  accessModes: ReadWriteMany
-  reclaimPolicy: Retain
-  driver: efs.csi.aws.com
-  volumeHandle: "fs-123456789"
-  subPath: "mount1"
-- name: mount2
-  storage: 11Gi
-  accessModes: ReadWriteMany
-  reclaimPolicy: Retain
-  driver: efs.csi.aws.com
-  volumeHandle: "fs-123456789"
-  subPath: "mount2"
+  - name: mount1
+    storage: 10Gi
+    accessModes: ReadWriteMany
+    reclaimPolicy: Retain
+    driver: efs.csi.aws.com
+    volumeHandle: "fs-123456789"
+    subPath: "mount1"
+  - name: mount2
+    storage: 11Gi
+    accessModes: ReadWriteMany
+    reclaimPolicy: Retain
+    driver: efs.csi.aws.com
+    volumeHandle: "fs-123456789"
+    subPath: "mount2"

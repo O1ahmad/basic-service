@@ -1,5 +1,5 @@
 name: foo-service
-common_name: foo-service.foo
+commonName: foo-service.foo
 namespace: foo
 image:
 command: []
@@ -88,13 +88,15 @@ deployStategy: {}
 # updateStrategy:
 #   type: RollingUpdate
 
-storageClass: []
+storageClass:
+  []
   # - create: true
   #   name: efs-sc
   #   provisioner: efs.csi.aws.com
 
 # see: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims
-persistentVolumeClaim: []
+persistentVolumeClaim:
+  []
   # - name: mount1
   #   accessModes: ReadWriteMany
   #   storage: 10Gi
@@ -107,7 +109,8 @@ persistentVolumeClaim: []
   #   mountPath: /mount2
 
 # see: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volumes
-persistentVolume: []
+persistentVolume:
+  []
   # - name: mount1
   #   storage: 10Gi
   #   accessModes: ReadWriteMany

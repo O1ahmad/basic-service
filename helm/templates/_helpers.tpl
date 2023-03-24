@@ -9,7 +9,7 @@ Expand service names containing embedded templates.
 Expand service common names/FQDN containing embedded templates.
 */}}
 {{- define "basic-service.commonName" -}}
-{{- tpl .Values.common_name . -}}
+{{- tpl .Values.commonName . -}}
 {{- end -}}
 
 {{/*

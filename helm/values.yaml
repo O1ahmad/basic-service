@@ -1,7 +1,7 @@
 name: foo-service
-common_name: foo-service.foo.use1.eks.gem.link
+common_name: foo-service.foo
 namespace: foo
-image: jenkins-docker.artifactory.m-devprod-prod.use1.eks.gem.link/foo-service:${artifact.metadata.tag}
+image:
 command: []
 args: []
 dockercfg:

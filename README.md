@@ -19,7 +19,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 | :-------------: | :--------------------------------------------------------: | :--------------: |
 |   _setupMode_   |  infrastructure provisioning setup mode (`container, k8s, systemd`)  |   `container`    |
 |     _name_      |                 name of service to deploy                  |    **required**    |
-|     _image_     |             service container image to deploy              |    **required**    |
+|     _image_     |             service container image to deploy              |    ""    |
 |     _command_     |             Command and arguments to execute on startup              |    **required**    |
 |     _user_     |             service container image to deploy              |    `root`    |
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |

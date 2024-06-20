@@ -1,4 +1,8 @@
 ---
+- name: Create a secured node to provision to
+  ansible.builtin.include_tasks: "../common/secure-node-setup.yml"
+  when: create_secure_node
+
 - name: Manage storage/data setup
   ansible.builtin.include_tasks: common/storage-setup.yml
 

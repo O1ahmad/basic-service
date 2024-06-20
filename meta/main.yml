@@ -5,7 +5,7 @@ galaxy_info:
   role_name: basic_service
   namespace: 0x0i
   description: Ansible role for running any software process/service
-  company: "O1.IO"
+  company: O1.IO
   license: MIT
   min_ansible_version: "2.5"
   platforms:

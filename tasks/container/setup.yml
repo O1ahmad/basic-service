@@ -14,17 +14,17 @@
 
 - name: Determine service container volume list
   ansible.builtin.set_fact:
-    volumeList: "{{ volumeList + [workDir + item.value.destinationPath + ':' + item.value.destinationPath] }}"
+    volume_list: "{{ volume_list + [work_dir + item.value.destinationPath + ':' + item.value.destinationPath] }}"
   with_dict: "{{ config }}"
 
 - name: Add data DIRs to container volume list
   ansible.builtin.set_fact:
-    volumeList: "{{ volumeList + [item.value.hostPath + ':' + item.value.appPath] }}"
-  with_dict: "{{ dataDirs }}"
+    volume_list: "{{ volume_list + [item.value.hostPath + ':' + item.value.appPath] }}"
+  with_dict: "{{ data_dirs }}"
 
 - name: Determine service container port list
   ansible.builtin.set_fact:
-    portList: "{{ portList + [item.value.ingressPort | string + ':' + item.value.servicePort | string] }}"
+    port_list: "{{ port_list + [item.value.ingressPort | string + ':' + item.value.servicePort | string] }}"
   with_dict: "{{ ports }}"
 
 # ---
@@ -35,9 +35,9 @@
     image: "{{ image }}"
     user: "{{ user | default(omit) }}:{{ group | default(omit) }}"
     command: "{{ command | default(omit) }}"
-    env: "{{ configEnv }}"
-    published_ports: "{{ portList }}"
-    volumes: "{{ volumeList }}"
+    env: "{{ config_env }}"
+    published_ports: "{{ port_list }}"
+    volumes: "{{ volume_list }}"
     cpus: "{{ resources.cpuLimit }}"
     memory: "{{ resources.memLimit }}"
-    restart_policy: "{{ restartPolicy }}"
+    restart_policy: "{{ restart_policy }}"

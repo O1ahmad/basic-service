@@ -7,20 +7,20 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0777
+    mode: "0777"
 
 - name: Ensure existence of operations/work dir
   become: true
   ansible.builtin.file:
-    path: "{{ workDir }}{{ item.value.destinationPath | dirname }}"
+    path: "{{ work_dir }}{{ item.value.destinationPath | dirname }}"
     state: directory
-    mode: 0777
+    mode: "0777"
   with_dict: "{{ config }}"
 
 - name: Generate local rendering of service config files
   ansible.builtin.copy:
     content: "{{ item.value.data | default(omit) }}"
-    dest: "{{ workDir }}/{{ item.value.destinationPath }}"
+    dest: "{{ work_dir }}/{{ item.value.destinationPath }}"
     mode: "{{ item.value.mode | default(644) }}"
     src: "{{ item.value.sourcePath | default(omit) }}"
   with_dict: "{{ config }}"

@@ -18,19 +18,22 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |
-|   _setupMode_   |  infrastructure provisioning setup mode (`container, k8s, systemd`)  |   `container`    |
+|   _setup_mode_   |  infrastructure provisioning setup mode (`container, k8s, systemd`)  |   `container`    |
 |     _name_      |                 name of service to deploy                  |    **required**    |
 |     _image_     |             service container image to deploy              |    ""    |
+|     _binary_url_     |             URL of the binary file to download              |    ""    |
+|     _binary_file_name_override_     |             Override the binary file name after moving it to the destination directory              |    ""    |
+|     _destination_directory_     |             directory where the binary file will be placed after downloading/extracting              |    `/usr/local/bin`    |
 |     _command_     |             Command and arguments to execute on startup              |    **required**    |
 |     _user_     |             service container image to deploy              |    `root`    |
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |
-|   _configEnv_   |  environment variables to set within the service runtime   |       `{}`       |
+|   _config_env_   |  environment variables to set within the service runtime   |       `{}`       |
 |     _ports_     |          listening port information for a service          |       `{}`       |
 |     _setup_iptables_     |          configure IP tables to allow ingress paths          |       `false`       |
 |  _hostDataDir_  |   host directory to store node runtime/operational data    |    `/var/tmp`    |
 |    _dataDir_    | container directory to store node runtime/operational data |      `/tmp`      |
-|    _workDir_    |      operational directory to store runtime artifacts      |    `/var/tmp`    |
-| _restartPolicy_ |                  container restart policy                  | `unless-stopped` |
+|    _work_dir_    |      operational directory to store runtime artifacts      |    `/var/tmp`    |
+| _restart_policy_ |                  container restart policy                  | `unless-stopped` |
 |   _systemd_   |    Systemd deployment custom unit, service and install properties    |     `{}`      |
 |     _cpus_      |  available CPU resources each deployed service can use   |      `1.0`       |
 |    _memory_     | available memory resources each deployed service can use |       `4g`       |

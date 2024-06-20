@@ -16,4 +16,4 @@ spec:
         - --request
         - GET
         - '{{ include "basic-service.fullname" . }}:{{ .Values.servicePort }}/'
-  restartPolicy: Never
+  restart_policy: Never

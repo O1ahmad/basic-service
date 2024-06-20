@@ -1,10 +1,11 @@
 ---
-# Compile systemd unit settings
+- name: Download service binary
+  ansible.builtin.include_tasks: ../common/download-binary.yml
 
 - name: Determine service Environment directives
   ansible.builtin.set_fact:
-    systemdEnvironmentDirective: "{{ systemdEnvironmentDirective + ' ' + item.key + '=' + item.value }}"
-  with_dict: "{{ configEnv }}"
+    systemd_environment_directive: "{{ systemd_environment_directive + ' ' + item.key + '=' + item.value }}"
+  with_dict: "{{ config_env }}"
 
 - name: Set default Sysetmd unit configurations
   ansible.builtin.set_fact:
@@ -15,7 +16,7 @@
       ExecStart: "{{ command | default(name) }}"
       User: "{{ user | default(omit) }}"
       Group: "{{ group | default(user) | default(omit) }}"
-      Environment: "{{ systemdEnvironmentDirective }}"
+      Environment: "{{ systemd_environment_directive }}"
       CPUQuota: "{{ cpus }}"
       MemoryHigh: "{{ memory }}"
     default_unit_install:

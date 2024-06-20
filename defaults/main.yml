@@ -1,15 +1,12 @@
 ---
-# name: basic-service (for #systemd setup)
-image: ""
-binary_url: ""
-
-# (Optional) Override the binary file name after moving it to the destination directory
-binary_file_name_override:
+### Common ###
+# name:
 destination_directory: /usr/local/bin
 setup_mode: container
 work_dir: /var/tmp
 
-command: ""
+command:
+
 ports: {}
 # example-port1:
 #   ingressPort: 80
@@ -39,7 +36,7 @@ config: {}
 #   data: |
 #     !/bin/bash
 #
-#     echo "Hello World!
+#     echo "Hello World!"
 
 config_env: {}
 # RUN_ARGS: --help
@@ -55,15 +52,41 @@ resources:
   memLimit: 1G
 
 restart_policy: unless-stopped
+uninstall: false
+volume_list: []
+port_list: []
+
+### Container ###
+image:
+
+### Systemd ###
+binary_url:
+# (Optional) Override the binary file name after moving it to the destination directory
+binary_file_name_override:
 
 systemd: {}
 # unit_properties: {}
 # service_properties: {}
 # install_properties: {}
 
-uninstall: false
+systemd_environment_directive:
 
-# default helper vars
-volume_list: []
-port_list: []
-systemd_environment_directive: ""
+### Secure Node ###
+create_secure_node: false
+# AWS credentials (for simplicity, these should be securely stored in practice)
+aws_access_key:
+aws_secret_key:
+region: us-east-1
+
+# Security group and EC2 instance variables
+security_group_name:
+security_group_description: "Security group for EC2 instance"
+ingress_ports:
+  - port: 22
+    protocol: tcp
+    cidr: 0.0.0.0/0
+
+instance_type: t2.micro
+storage_size: 8
+public_ip: true
+instance_tag:

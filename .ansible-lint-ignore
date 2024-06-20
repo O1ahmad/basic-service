@@ -1,5 +1,4 @@
 # This file contains ignores rule violations for ansible-lint
-.ansible-lint schema[ansible-lint-config]
 meta/main.yml schema[meta]
 tasks/common/download-binary.yml jinja[spacing]
 tasks/systemd/setup.yml var-naming[no-role-prefix]

@@ -50,20 +50,6 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 |     _destination_directory_     |             directory where the binary file will be placed after downloading/extracting              |    `/usr/local/bin`    |
 |   _systemd_   |    Systemd deployment custom unit, service and install properties    |     `{}`      |
 
-### Secure Node
-
-|       var       |                        description                         |     default      |
-| :-------------: | :--------------------------------------------------------: | :--------------: |
-|     _create_secure_node_     |          whether to create a secure node to setup          |       `false`       |
-|     _setup_iptables_     |          configure IP tables to allow ingress paths          |       `false`       |
-|   _security_group_name_   |     name of the security group to create      |     ` `     |
-|   _security_group_description_   |  description for the security group   |  `Security group for EC2 instance`  |
-|   _region_   |    AWS region where resources will be deployed     |     `us-east-1`     |
-|   _aws_access_key_   |    AWS access key     |     ` `     |
-|   _aws_secret_key_   |    AWS secret key     |     ` `     |
-|   _instance_type_   |    EC2 instance type     |     `t2.micro`     |
-|   _instance_tag_   |    Tag for the EC2 instance and security group     |     ` `     |
-|   _storage_size_   |    Storage size for the EC2 instance in GB     |     `8`     |
 
 ## Containerized Apps
 - [O1 Containers](https://github.com/0x0I/containers)

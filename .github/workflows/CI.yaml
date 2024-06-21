@@ -6,7 +6,7 @@ on:
     branches: [main]
   pull_request:
 jobs:
-  Build-Test-Service-Setup:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code

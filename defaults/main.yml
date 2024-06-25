@@ -69,4 +69,6 @@ systemd: {}
 # service_properties: {}
 # install_properties: {}
 
-systemd_environment_directive:
+systemd_environment_directive: ""
+
+setup_iptables: false

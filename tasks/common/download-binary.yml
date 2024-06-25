@@ -20,7 +20,9 @@
     src: /tmp/{{ binary_file_name }}
     dest: "{{ destination_directory }}"
     remote_src: true
-  when: binary_file_name.endswith('.tar') or binary_file_name.endswith('.tar.gz') or binary_file_name.endswith('.tgz') or binary_file_name.endswith('.zip')
+  when: >
+    binary_file_name.endswith('.tar') or binary_file_name.endswith('.tar.gz') or
+    binary_file_name.endswith('.tgz') or binary_file_name.endswith('.zip')
 
 - name: Move the file if it's not an archive
   ansible.builtin.command: >

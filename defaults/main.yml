@@ -46,11 +46,6 @@ data_dirs: {}
 #   hostPath: /mnt/data
 #   appPath: /app/data
 
-resources:
-  cpuLimit: 1
-  memRequest: 1G
-  memLimit: 1G
-
 restart_policy: unless-stopped
 uninstall: false
 volume_list: []
@@ -58,11 +53,18 @@ port_list: []
 
 ### Container ###
 image:
+resources:
+  cpuLimit: 1
+  memRequest: 1G
+  memLimit: 1G
 
 ### Systemd ###
 binary_url:
 # (Optional) Override the binary file name after moving it to the destination directory
 binary_file_name_override:
+
+cpus: 100%
+memory: 1G
 
 systemd: {}
 # unit_properties: {}
@@ -70,5 +72,12 @@ systemd: {}
 # install_properties: {}
 
 systemd_environment_directive: ""
+
+### Kubernetes ###
+helm_chart_path: ../../helm
+helm_namespace: default
+helm_values_path: values.yml
+
+###
 
 setup_iptables: false

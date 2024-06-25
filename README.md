@@ -32,14 +32,15 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 |     _ports_     |          listening port information for a service          |       `{}`       |
 |    _dataDir_    |  directory to store service runtime/operational data |      `/tmp`      |
 | _restart_policy_ |                  service restart policy                  | `unless-stopped` |
-|     _cpus_      |  available CPU resources each deployed service can use   |      `1.0`       |
-|    _memory_     | available memory resources each deployed service can use |       `4g`       |
 
 ### Container
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |
 |     _image_     |             service container image to deploy              |    ` `    |
+|     _resources.cpuLimit_      |  limit of CPU resources each deployed service can use   |      `1.0`       |
+|    _resources.memLimit_     | limit of memory resources each deployed service can use |       `1G`       |
+|    _resources.memRequest_     | requested memory resources each deployed service can use |       `1G`       |
 
 ### Systemd
 
@@ -49,7 +50,16 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 |     _binary_file_name_override_     |             Override the binary file name after moving it to the destination directory              |    ` `    |
 |     _destination_directory_     |             directory where the binary file will be placed after downloading/extracting              |    `/usr/local/bin`    |
 |   _systemd_   |    Systemd deployment custom unit, service and install properties    |     `{}`      |
+|     _cpus_      |  percentage of CPU resources each deployed service can use   |      `100%`       |
+|    _memory_     | available memory resources each deployed service can use |       `1G`       |
 
+### Kubernetes (k8s)
+
+|       var       |                        description                         |     default      |
+| :-------------: | :--------------------------------------------------------: | :--------------: |
+|     _helm_chart_path_     |             path to Helm chart to use for the service deployment/release              |    `../../helm`    |
+|     _helm_namespace_      |  Kubernetes namespace to deploy to   |      `default`       |
+|    _helm_values_path_     | file to load Helm chart values (see [here](./helm/README.md) for available values) |       `values.yml`       |
 
 ## Containerized Apps
 - [O1 Containers](https://github.com/0x0I/containers)

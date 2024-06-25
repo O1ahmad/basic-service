@@ -1,0 +1,19 @@
+---
+- name: Ensure Helm is installed
+  ansible.builtin.command: helm version
+  register: helm_version
+  ignore_errors: true
+
+- name: Install Helm if not installed
+  ansible.builtin.aptapt:
+    name: helm
+    state: present
+  when: helm_version.failed
+
+- name: Deploy Helm chart
+  kubernetes.core.helm:
+    name: "{{ name }}"
+    chart_ref: "{{ helm_chart_path }}"
+    release_namespace: "{{ helm_namespace }}"
+    values_files:
+      - "{{ helm_values_path }}"

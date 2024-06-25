@@ -5,26 +5,22 @@
     state: directory
     mode: "0755"
 
+- name: Set Binary file name based on URL
+  ansible.builtin.set_fact:
+    binary_file_name: "{{ binary_url | basename }}"
+
 - name: Download the binary file
   ansible.builtin.get_url:
     url: "{{ binary_url }}"
     dest: /tmp/{{ binary_file_name }}
     mode: "0755"
-  vars:
-    binary_file_name: "{{ binary_url | basename }}"
 
-- name: Unarchive the file if it's a tar archive
+- name: Unarchive the file if it's an archive
   ansible.builtin.unarchive:
     src: /tmp/{{ binary_file_name }}
     dest: "{{ destination_directory }}"
     remote_src: true
-  when: binary_file_name.endswith('.tar') or binary_file_name.endswith('.tar.gz') or binary_file_name.endswith('.tgz')
-
-- name: Unzip the file if it's a zip archive
-  unzip:
-    src: /tmp/{{ binary_file_name }}
-    dest: "{{ destination_directory }}"
-  when: binary_file_name.endswith('.zip')
+  when: binary_file_name.endswith('.tar') or binary_file_name.endswith('.tar.gz') or binary_file_name.endswith('.tgz') or binary_file_name.endswith('.zip')
 
 - name: Move the file if it's not an archive
   ansible.builtin.command: >
@@ -33,7 +29,7 @@
     not (binary_file_name.endswith('.tar') or
          binary_file_name.endswith('.tar.gz') or
          binary_file_name.endswith('.tgz') or
-         binary_file_name.endswith('.zip')
+         binary_file_name.endswith('.zip'))
   register: mv_output
   changed_when: mv_output.rc != 0
 
@@ -45,4 +41,4 @@
     not (binary_file_name.endswith('.tar') or
          binary_file_name.endswith('.tar.gz') or
          binary_file_name.endswith('.tgz') or
-         binary_file_name.endswith('.zip')
+         binary_file_name.endswith('.zip'))

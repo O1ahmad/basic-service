@@ -5,7 +5,7 @@
   ignore_errors: true
 
 - name: Install Helm if not installed
-  ansible.builtin.aptapt:
+  ansible.builtin.apt:
     name: helm
     state: present
   when: helm_version.failed

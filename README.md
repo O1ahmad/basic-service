@@ -55,6 +55,12 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 
 ### Kubernetes (k8s)
 
+To authorize access to the target Kubernetes cluster, set the following environment variable:
+```
+export KUBECONFIG=<path-to-the-kubeconfig-file>
+export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
+```
+
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |
 |     _helm_chart_path_     |             path to Helm chart to use for the service deployment/release              |    `../../helm`    |

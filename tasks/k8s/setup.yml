@@ -4,11 +4,30 @@
   register: helm_version
   ignore_errors: true
 
-- name: Install Helm if not installed
-  ansible.builtin.apt:
+- name: Install Helm on Linux distributions
+  ansible.builtin.package:
     name: helm
     state: present
-  when: helm_version.failed
+  when:
+    - ansible_os_family not in ['Darwin']
+    - helm_version.failed
+
+- name: Install Helm on macOS
+  community.general.homebrew:
+    name: helm
+    state: present
+  when:
+    - ansible_os_family == 'Darwin'
+    - helm_version.failed
+
+- name: Install Helm via script on other systems
+  ansible.builtin.command: |
+    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  when:
+    - ansible_os_family not in ['Debian', 'RedHat', 'Darwin']
+    - helm_version.failed
+  args:
+    creates: /usr/local/bin/helm
 
 - name: Deploy Helm chart
   kubernetes.core.helm:

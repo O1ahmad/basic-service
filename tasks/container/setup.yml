@@ -41,3 +41,13 @@
     cpus: "{{ resources.cpuLimit }}"
     memory: "{{ resources.memLimit }}"
     restart_policy: "{{ restart_policy }}"
+
+# Reset volume_list for subsequent iterations
+- name: Reset volume_list
+  set_fact:
+    volume_list: []
+
+# Reset port_list or subsequent iterations
+- name: Reset port_list
+  set_fact:
+    port_list: []

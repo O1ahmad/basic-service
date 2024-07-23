@@ -48,6 +48,7 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 | :-------------: | :--------------------------------------------------------: | :--------------: |
 |     _binary_url_     |             URL of the binary file to download              |    ` `    |
 |     _binary_file_name_override_     |             Override the binary file name after moving it to the destination directory              |    ` `    |
+|    _binary_strip_components_     | Strip NUMBER leading components from file names on extraction | `0` |
 |     _destination_directory_     |             directory where the binary file will be placed after downloading/extracting              |    `/usr/local/bin`    |
 |   _systemd_   |    Systemd deployment custom unit, service and install properties    |     `{}`      |
 |     _cpus_      |  percentage of CPU resources each deployed service can use   |      `100%`       |

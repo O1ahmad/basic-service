@@ -20,6 +20,8 @@
     src: /tmp/{{ binary_file_name }}
     dest: "{{ destination_directory }}"
     remote_src: true
+    extra_opts:
+      - "--strip-components={{ binary_strip_components }}"
   when: >
     binary_file_name.endswith('.tar') or binary_file_name.endswith('.tar.gz') or
     binary_file_name.endswith('.tgz') or binary_file_name.endswith('.zip')

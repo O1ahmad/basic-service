@@ -72,6 +72,7 @@ systemd: {}
 # install_properties: {}
 
 systemd_environment_directive: ""
+binary_strip_components: 0
 
 ### Kubernetes ###
 helm_chart_path: ../../helm

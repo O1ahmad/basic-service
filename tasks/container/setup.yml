@@ -38,8 +38,8 @@
     env: "{{ config_env }}"
     published_ports: "{{ port_list }}"
     volumes: "{{ volume_list }}"
-    cpus: "{{ resources.cpuLimit }}"
-    memory: "{{ resources.memLimit }}"
+    cpus: "{{ cpus }}"
+    memory: "{{ memroy }}"
     restart_policy: "{{ restart_policy }}"
 
 # Reset volume_list for subsequent iterations

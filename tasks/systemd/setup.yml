@@ -17,7 +17,7 @@
       User: "{{ user | default(omit) }}"
       Group: "{{ group | default(user) | default(omit) }}"
       Environment: "{{ systemd_environment_directive }}"
-      CPUQuota: "{{ cpus }}"
+      CPUQuota: "{{ cpus }}%"
       MemoryHigh: "{{ memory }}"
     default_unit_install:
       WantedBy: multi-user.target

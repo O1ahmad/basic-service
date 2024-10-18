@@ -23,24 +23,23 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 |   _setup_mode_   |  infrastructure provisioning setup mode (`container, k8s, systemd`)  |   `container`    |
 |     _name_      |                 name of service to deploy                  |    **required**    |
 |     _command_     |             Command and arguments to execute on startup              |    **required**    |
-|  _hostDataDir_  |   host directory to store node runtime/operational data    |    `/var/tmp`    |
-|    _work_dir_    |      operational directory to store runtime artifacts      |    `/var/tmp`    |
-|   _uninstall_   |    whether to remove installed service and artifacts    |     `false`      |
 |     _user_     |             service user to setup              |    `root`    |
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |
 |   _config_env_   |  environment variables to set within the service runtime   |       `{}`       |
 |     _ports_     |          listening port information for a service          |       `{}`       |
 |    _dataDir_    |  directory to store service runtime/operational data |      `/tmp`      |
+|  _hostDataDir_  |   host directory to store node runtime/operational data (*container setups*)    |    `/var/tmp`    |
+|    _work_dir_    |      operational directory to store runtime artifacts      |    `/var/tmp`    |
+|     _cpus_      |  CPU resources each deployed service can use (either percentage for systemd or cores for containers)   |      `100`       |
+|    _memory_     | available memory resources each deployed service can use |       `1G`       |
 | _restart_policy_ |                  service restart policy                  | `unless-stopped` |
+|   _uninstall_   |    whether to remove installed service and artifacts    |     `false`      |
 
 ### Container
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |
 |     _image_     |             service container image to deploy              |    ` `    |
-|     _resources.cpuLimit_      |  limit of CPU resources each deployed service can use   |      `1.0`       |
-|    _resources.memLimit_     | limit of memory resources each deployed service can use |       `1G`       |
-|    _resources.memRequest_     | requested memory resources each deployed service can use |       `1G`       |
 
 ### Systemd
 
@@ -51,8 +50,6 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 |    _binary_strip_components_     | Strip NUMBER leading components from file names on extraction | `0` |
 |     _destination_directory_     |             directory where the binary file will be placed after downloading/extracting              |    `/usr/local/bin`    |
 |   _systemd_   |    Systemd deployment custom unit, service and install properties    |     `{}`      |
-|     _cpus_      |  percentage of CPU resources each deployed service can use   |      `100%`       |
-|    _memory_     | available memory resources each deployed service can use |       `1G`       |
 
 ### Kubernetes (k8s)
 

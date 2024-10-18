@@ -53,7 +53,7 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 
 ### Kubernetes (k8s)
 
-To authorize access to the target Kubernetes cluster, set the following environment variable:
+To authorize access to the target Kubernetes cluster, set the following environment variables:
 ```
 export KUBECONFIG=<path-to-the-kubeconfig-file>
 export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>

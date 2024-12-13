@@ -53,10 +53,7 @@ port_list: []
 
 ### Container ###
 image:
-resources:
-  cpuLimit: 1
-  memRequest: 1G
-  memLimit: 1G
+network_mode: bridge
 
 ### Systemd ###
 binary_url:

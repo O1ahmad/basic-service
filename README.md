@@ -74,6 +74,12 @@ export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
 ## Dependencies
 
 ```
+roles:
+- name: ansible-role-systemd
+  url: git+https://github.com/O1ahmad/ansible-role-system.git
+
+# ansible-galaxy install git+https://github.com/O1ahmad/ansible-role-system.git
+
 collections:
 - name: community.docker
 ```

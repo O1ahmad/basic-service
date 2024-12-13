@@ -33,13 +33,13 @@
   community.docker.docker_container:
     name: "{{ name }}"
     image: "{{ image }}"
-    user: "{{ user | default(omit) }}:{{ group | default(omit) }}"
     command: "{{ command | default(omit) }}"
     env: "{{ config_env }}"
     published_ports: "{{ port_list }}"
+    network_mode: "{{ network_mode }}"
     volumes: "{{ volume_list }}"
     cpus: "{{ cpus }}"
-    memory: "{{ memroy }}"
+    memory: "{{ memory }}"
     restart_policy: "{{ restart_policy }}"
 
 # Reset volume_list for subsequent iterations

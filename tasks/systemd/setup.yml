@@ -19,6 +19,7 @@
       Environment: "{{ systemd_environment_directive }}"
       CPUQuota: "{{ cpus }}%"
       MemoryHigh: "{{ memory }}"
+      Restart: "{{ restart_policy }}"
     default_unit_install:
       WantedBy: multi-user.target
     custom_unit_properties: "{{ systemd.unit_properties | default({}) }}"
@@ -29,10 +30,12 @@
 
 - name: Start service systemd unit
   ansible.builtin.include_role:
-    name: 0x0i.systemd
+    name: ansible-role-systemd
   vars:
     unit_config:
       - name: "{{ name }}"
+        state: started
+        enabled: true
         Unit: "{{ default_unit_info | combine(custom_unit_properties) }}"
         Service: "{{ default_unit_service | combine(custom_service_properties) }}"
         Install: "{{ default_unit_install | combine(custom_install_properties) }}"

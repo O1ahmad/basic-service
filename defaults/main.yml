@@ -46,7 +46,7 @@ data_dirs: {}
 #   hostPath: /mnt/data
 #   appPath: /app/data
 
-restart_policy: unless-stopped
+restart_policy: on-failure
 uninstall: false
 volume_list: []
 port_list: []

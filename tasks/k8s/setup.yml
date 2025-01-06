@@ -2,7 +2,8 @@
 - name: Ensure Helm is installed
   ansible.builtin.command: helm version
   register: helm_version
-  ignore_errors: true
+  failed_when: helm_version.rc != 0
+  changed_when: false
 
 - name: Install Helm on Linux distributions
   ansible.builtin.package:

@@ -28,7 +28,7 @@
 
 - name: Move the file if it's not an archive
   ansible.builtin.command: >
-    mv /tmp/{{ binary_file_name }} {{ destination_directory }}/{{ binary_file_name_override|default(binary_file_name) }}
+    mv /tmp/{{ binary_file_name }} {{ destination_directory }}/{{ binary_file_name_override | default(binary_file_name) }}
   when: >
     not (binary_file_name.endswith('.tar') or
          binary_file_name.endswith('.tar.gz') or

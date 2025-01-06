@@ -13,6 +13,7 @@
       Wants: network-online.target
       After: syslog.target network-online.target
     default_unit_service:
+      Type: "{{ systemd.service_type | default('simple') }}"
       ExecStart: "{{ command | default(name) }}"
       User: "{{ user | default(omit) }}"
       Group: "{{ group | default(user) | default(omit) }}"

@@ -1,22 +1,78 @@
 ---
-- name: Uninstall service container
-  community.docker.docker_container:
-    name: "{{ name }}"
-    state: absent
-    purge_networks: true
-  listen: Container uninstall
+- name: Uninstall Service
+  listen: Uninstall Service
+  block:
+    # --- Storage Handlers ---
+    - name: Remove host data directory
+      ansible.builtin.file:
+        path: "{{ hostDataDir }}"
+        state: absent
+      when: hostDataDir is defined
 
-- name: Remove generated service config files
-  become: true
-  ansible.builtin.file:
-    path: "{{ work_dir }}/{{ item.value.destinationPath }}"
-    state: absent
-  with_dict: "{{ config }}"
-  listen: Container uninstall
+    # --- Network Handlers ---
+    - name: Remove service ingress iptables rules
+      ansible.builtin.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_ports: "{{ ingress_list }}"
+        jump: ACCEPT
+        state: absent
 
-- name: Remove service data directory
-  become: true
-  ansible.builtin.file:
-    path: "{{ hostDataDir }}"
-    state: absent
-  listen: Container uninstall
+    # --- Systemd Handlers ---
+    - name: Remove destination directory
+      ansible.builtin.file:
+        path: "{{ destination_directory }}"
+        state: absent
+      when: setup_mode == 'systemd'
+
+    - name: Remove temporary binary file
+      ansible.builtin.file:
+        path: "/tmp/{{ binary_file_name }}"
+        state: absent
+      when: setup_mode == 'systemd'
+
+    - name: Remove extracted files or moved binary
+      ansible.builtin.file:
+        path: "{{ destination_directory }}/{{ binary_file_name_override | default(binary_file_name) }}"
+        state: absent
+      when: setup_mode == 'systemd'
+
+    - name: Remove the systemd unit file
+      ansible.builtin.include_role:
+        name: ansible-role-systemd
+      vars:
+        unit_config:
+          - name: "{{ name }}"
+            state: absent
+            enabled: false
+        perform_uninstall: true
+      when: setup_mode == 'systemd'
+
+    - name: Remove generated config files
+      ansible.builtin.file:
+        path: "{{ item.value.destinationPath }}"
+        state: absent
+      with_dict: "{{ config }}"
+      when: setup_mode == 'systemd'
+
+    - name: Remove config directories
+      ansible.builtin.file:
+        path: "{{ item.value.destinationPath | dirname }}"
+        state: absent
+      with_dict: "{{ config }}"
+      when: setup_mode == 'systemd'
+
+    # --- Container Handlers ---
+    - name: Container uninstall
+      community.docker.docker_container:
+        name: "{{ name }}"
+        state: absent
+      when: setup_mode == 'container'
+
+    # --- Kubernetes Handlers ---
+    - name: Uninstall Helm release
+      kubernetes.core.helm:
+        name: "{{ name }}"
+        state: absent
+        release_namespace: "{{ helm_namespace }}"
+      when: setup_mode == 'k8s'

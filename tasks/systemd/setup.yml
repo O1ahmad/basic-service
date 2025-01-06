@@ -7,7 +7,7 @@
     systemd_environment_directive: "{{ systemd_environment_directive + ' ' + item.key + '=' + item.value }}"
   with_dict: "{{ config_env }}"
 
-- name: Set default Sysetmd unit configurations
+- name: Set default Systemd unit configurations
   ansible.builtin.set_fact:
     default_unit_info:
       Wants: network-online.target

@@ -4,6 +4,7 @@
 destination_directory: /usr/local/bin
 setup_mode: container
 work_dir: /var/tmp
+host_data_dir: /var/tmp
 
 command:
 

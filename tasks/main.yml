@@ -1,4 +1,15 @@
 ---
+- name: Uninstall provisioned service components
+  when: uninstall|bool
+  block:
+    - name: Broadcast uninstall signal
+      ansible.builtin.command: /bin/true
+      notify: Uninstall Service
+      changed_when: true
+  always:
+    - name: End play following uninstallation
+      ansible.builtin.meta: end_play
+
 - name: Manage storage/data setup
   ansible.builtin.include_tasks: common/storage-setup.yml
 

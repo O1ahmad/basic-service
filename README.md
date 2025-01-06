@@ -20,16 +20,15 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |
-|   _setup_mode_   |  infrastructure provisioning setup mode (`container, k8s, systemd`)  |   `container`    |
+|   _setup_mode_   |  infrastructure provisioning setup mode (`container, k8s, systemd`)  |   `undefined`    |
 |     _name_      |                 name of service to deploy                  |    **required**    |
 |     _command_     |             Command and arguments to execute on startup              |    **required**    |
 |     _user_     |             service user to setup              |    `root`    |
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |
 |   _config_env_   |  environment variables to set within the service runtime   |       `{}`       |
 |     _ports_     |          listening port information for a service          |       `{}`       |
-|    _dataDir_    |  directory to store service runtime/operational data |      `/tmp`      |
-|  _hostDataDir_  |   host directory to store node runtime/operational data (*container setups*)    |    `/var/tmp`    |
-|    _work_dir_    |      operational directory to store runtime artifacts      |    `/var/tmp`    |
+|    _data_dir_    |  directory mappings to store service runtime/operational data |      `/tmp`      |
+|  _host_data_dir_  |   host directory for general deployment operations    |    `/var/tmp`    |
 |     _cpus_      |  CPU resources each deployed service can use (either percentage for systemd or cores for containers)   |      `100`       |
 |    _memory_     | available memory resources each deployed service can use |       `1G`       |
 | _restart_policy_ |                  service restart policy                  | `unless-stopped` |
@@ -67,7 +66,7 @@ export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
 |    _helm_values_path_     | file to load Helm chart values (see [here](./helm/README.md) for available values) |       `values.yml`       |
 
 ## Containerized Apps
-- [O1 Containers](https://github.com/0x0I/containers)
+- [O1 Containers](https://github.com/O1ahmad/containers)
 - [Dockerhub](https://hub.docker.com/search?q=)
 - [Quay.io](https://quay.io/search)
 
@@ -76,9 +75,9 @@ export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
 ```
 roles:
 - name: ansible-role-systemd
-  url: git+https://github.com/O1ahmad/ansible-role-system.git
+  url: git+https://github.com/O1ahmad/ansible-role-systemd.git
 
-# ansible-galaxy install git+https://github.com/O1ahmad/ansible-role-system.git
+# ansible-galaxy install git+https://github.com/O1ahmad/ansible-role-systemd.git
 
 collections:
 - name: community.docker
@@ -86,19 +85,47 @@ collections:
 
 ## Example Playbook
 
+- Launch a Wireguard client which establishes a secure peer tunnel connection:
+
 ```
-- hosts: servers
+- name: Configure WireGuard VPN
+  hosts: VPNServers
+  remote_user: devops
+  become: true
   roles:
-```
+    - role: basic-service
+      vars:
+        setup_mode: systemd
+        name: wireguard
+        binary_url: https://git.zx2c4.com/wireguard-tools/snapshot/wireguard-tools-1.0.20210424.tar.xz
+        binary_file_name_override: wireguard
+        command: >
+          /usr/local/bin/wg-quick up wg0
+        cpus: 50
+        memory: 1G
+        config:
+          wg0.conf:
+            destinationPath: /etc/wireguard/wg0.conf
+            data: |
+              [Interface]
+              PrivateKey = <Your-Private-Key>
+              Address = 10.0.0.1/24
+              ListenPort = 51820
 
-- Launch a container that sleeps for infinity:
-
-```
-  - role: 0x0I.basic_service
-    vars:
-      name: sleepy-service
-      image: busybox:latest
-      command: ["sleep", "infinity"]
+              [Peer]
+              PublicKey = <Peer-Public-Key>
+              Endpoint = <Peer-Public-IP>:51820
+              AllowedIPs = 10.0.0.2/32
+        ports:
+          wireguard:
+            ingressPort: 51820
+            servicePort: 51820
+        systemd:
+          service_properties:
+            User: wireguard
+            ExecStart: /usr/local/bin/wg-quick up wg0
+            ExecStop: /usr/local/bin/wg-quick down wg0
+            Restart: on-failure
 ```
 
 ## License

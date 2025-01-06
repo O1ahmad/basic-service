@@ -5,8 +5,8 @@
   ansible.builtin.file:
     path: "{{ host_data_dir }}"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ user | default(ansible_user) }}"
+    group: "{{ group | default(user) | default(ansible_user) }}"
     mode: "0755"
 
 - name: Ensure existence of config dir
@@ -14,6 +14,8 @@
   ansible.builtin.file:
     path: "{{ host_data_dir + item.value.destinationPath | dirname }}"
     state: directory
+    owner: "{{ user | default(ansible_user) }}"
+    group: "{{ group | default(user) | default(ansible_user) }}"
     mode: "0755"
   with_dict: "{{ config }}"
 
@@ -23,12 +25,16 @@
     dest: "{{ host_data_dir + item.value.destinationPath }}"
     mode: "{{ item.value.mode | default(644) }}"
     src: "{{ item.value.sourcePath | default(omit) }}"
+    owner: "{{ user | default(ansible_user) }}"
+    group: "{{ group | default(user) | default(ansible_user) }}"
   with_dict: "{{ config }}"
 
 - name: Ensure existence of host data dirs
   become: true
   ansible.builtin.file:
-    path: "{{ item.value.hostPath | dirname }}"
+    path: "{{ item.value.hostPath }}"
     state: directory
     mode: "0755"
+    owner: "{{ user | default(ansible_user) }}"
+    group: "{{ group | default(user) | default(ansible_user) }}"
   with_dict: "{{ data_dirs }}"

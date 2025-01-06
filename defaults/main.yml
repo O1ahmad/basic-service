@@ -1,6 +1,7 @@
 ---
 ### Common ###
 # name:
+# user:
 destination_directory: /usr/local/bin
 
 # setup_mode: undefined by default to support existing service artifacts use-cases

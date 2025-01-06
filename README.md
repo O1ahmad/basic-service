@@ -23,7 +23,7 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 |   _setup_mode_   |  infrastructure provisioning setup mode (`container, k8s, systemd`)  |   `undefined`    |
 |     _name_      |                 name of service to deploy                  |    **required**    |
 |     _command_     |             Command and arguments to execute on startup              |    **required**    |
-|     _user_     |             service user to setup              |    `root`    |
+|     _user_     |             service user to setup              |    `<operatoring-user>`    |
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |
 |   _config_env_   |  environment variables to set within the service runtime   |       `{}`       |
 |     _ports_     |          listening port information for a service          |       `{}`       |

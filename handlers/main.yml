@@ -1,70 +1,79 @@
 ---
-- name: Uninstall Service
+# --- Storage Handlers ---
+- name: Remove host data directory
   listen: Uninstall Service
-  block:
-    # --- Storage Handlers ---
-    - name: Remove host data directory
-      ansible.builtin.file:
-        path: "{{ host_data_dir }}"
-        state: absent
-      when: host_data_dir != "/var/tmp"
+  ansible.builtin.file:
+    path: "{{ host_data_dir }}"
+    state: absent
+  when:
+    - host_data_dir is defined
+    - host_data_dir != "/var/tmp"
 
-    - name: Remove config directories
-      ansible.builtin.file:
-        path: "{{ host_data_dir + item.value.destinationPath | dirname }}"
-        state: absent
-      with_dict: "{{ config }}"
+- name: Remove configuration directories
+  listen: Uninstall Service
+  ansible.builtin.file:
+    path: "{{ host_data_dir + item.value.destinationPath | dirname }}"
+    state: absent
+  loop: "{{ config | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  when: config is defined and config | length > 0
 
-    - name: Remove config directories
-      ansible.builtin.file:
-        path: "{{ item.value.hostPath | dirname }}"
-        state: absent
-      with_dict: "{{ data_dirs }}"
+- name: Remove data directories
+  listen: Uninstall Service
+  become: true
+  ansible.builtin.file:
+    path: "{{ item.value.hostPath }}"
+    state: absent
+  loop: "{{ data_dirs | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  when: data_dirs is defined and data_dirs | length > 0
 
-    # --- Network Handlers ---
-    - name: Remove service ingress iptables rules
-      ansible.builtin.iptables:
-        chain: INPUT
-        protocol: tcp
-        destination_ports: "{{ ingress_list }}"
-        jump: ACCEPT
-        state: absent
+# --- Network Handlers ---
+- name: Remove service ingress iptables rules
+  listen: Uninstall Service
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_ports: "{{ ingress_list }}"
+    jump: ACCEPT
+    state: absent
+  when: ingress_list is defined and ingress_list | length > 0
 
-    # --- Systemd Handlers ---
-    - name: Remove temporary binary file
-      ansible.builtin.file:
-        path: "/tmp/{{ binary_file_name }}"
-        state: absent
-      when: setup_mode == 'systemd'
+# --- Systemd Handlers ---
+- name: Remove temporary binary file
+  listen: Uninstall Service
+  ansible.builtin.file:
+    path: "/tmp/{{ binary_file_name }}"
+    state: absent
+  when:
+    - setup_mode == 'systemd'
+    - binary_file_name is defined
 
-    - name: Remove extracted files or moved binary
-      ansible.builtin.file:
-        path: "{{ destination_directory }}/{{ binary_file_name_override | default(binary_file_name) }}"
-        state: absent
-      when: setup_mode == 'systemd'
+- name: Remove extracted files or moved binary
+  listen: Uninstall Service
+  ansible.builtin.file:
+    path: "{{ destination_directory }}/{{ binary_file_name_override | default(binary_file_name) }}"
+    state: absent
+  when:
+    - setup_mode == 'systemd'
+    - binary_file_name is defined
+    - destination_directory is defined
 
-    - name: Remove the systemd unit file
-      ansible.builtin.include_role:
-        name: ansible-role-systemd
-      vars:
-        unit_config:
-          - name: "{{ name }}"
-            state: absent
-            enabled: false
-        perform_uninstall: true
-      when: setup_mode == 'systemd'
+# --- Container Handlers ---
+- name: Container uninstall
+  listen: Uninstall Service
+  community.docker.docker_container:
+    name: "{{ name }}"
+    state: absent
+  when: setup_mode == 'container'
 
-    # --- Container Handlers ---
-    - name: Container uninstall
-      community.docker.docker_container:
-        name: "{{ name }}"
-        state: absent
-      when: setup_mode == 'container'
-
-    # --- Kubernetes Handlers ---
-    - name: Uninstall Helm release
-      kubernetes.core.helm:
-        name: "{{ name }}"
-        state: absent
-        release_namespace: "{{ helm_namespace }}"
-      when: setup_mode == 'k8s'
+# --- Kubernetes Handlers ---
+- name: Uninstall Helm release
+  listen: Uninstall Service
+  kubernetes.core.helm:
+    name: "{{ name }}"
+    state: absent
+    release_namespace: "{{ helm_namespace }}"
+  when: setup_mode == 'k8s'

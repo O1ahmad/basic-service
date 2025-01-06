@@ -1,22 +1,36 @@
 ---
 - name: Uninstall provisioned service components
-  when: uninstall|bool
+  when: uninstall | bool
   block:
     - name: Broadcast uninstall signal
       ansible.builtin.command: /bin/true
       notify: Uninstall Service
       changed_when: true
-  always:
-    - name: End play following uninstallation
-      ansible.builtin.meta: end_play
 
-- name: Manage storage/data setup
-  ansible.builtin.include_tasks: common/storage-setup.yml
+    - name: Flush handlers to ensure uninstall is completed
+      ansible.builtin.meta: flush_handlers
 
-- name: Setup service infrastructure topology
-  when: setup_mode is defined
-  ansible.builtin.include_tasks: "{{ setup_mode }}/setup.yml"
+    - name: Remove systemd artifacts
+      ansible.builtin.include_role:
+        name: ansible-role-systemd
+      vars:
+        unit_config:
+          - name: "{{ name }}"
+            state: absent
+            enabled: false
+        perform_uninstall: true
+      when: setup_mode == 'systemd'
 
-- name: Manage networking and IP tables setup
-  when: setup_iptables|bool
-  ansible.builtin.include_tasks: common/network-setup.yml
+- name: Setup service components
+  when: uninstall is not defined or not uninstall | bool
+  block:
+    - name: Manage storage/data setup
+      ansible.builtin.include_tasks: common/storage-setup.yml
+
+    - name: Setup service infrastructure topology
+      when: setup_mode is defined
+      ansible.builtin.include_tasks: "{{ setup_mode }}/setup.yml"
+
+    - name: Manage networking and IP tables setup
+      when: setup_iptables | bool
+      ansible.builtin.include_tasks: common/network-setup.yml

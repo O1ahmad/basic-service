@@ -14,6 +14,7 @@
   ansible.builtin.include_tasks: common/storage-setup.yml
 
 - name: Setup service infrastructure topology
+  when: setup_mode is defined
   ansible.builtin.include_tasks: "{{ setup_mode }}/setup.yml"
 
 - name: Manage networking and IP tables setup

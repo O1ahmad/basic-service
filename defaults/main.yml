@@ -2,11 +2,13 @@
 ### Common ###
 # name:
 destination_directory: /usr/local/bin
-setup_mode: container
-work_dir: /var/tmp
+
+# setup_mode: undefined by default to support existing service artifacts use-cases
+
 host_data_dir: /var/tmp
 
 command:
+# sleep infinity
 
 ports: {}
 # example-port1:

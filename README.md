@@ -97,6 +97,7 @@ collections:
       vars:
         setup_mode: systemd
         name: wireguard
+        user: wireguard
         binary_url: https://git.zx2c4.com/wireguard-tools/snapshot/wireguard-tools-1.0.20210424.tar.xz
         binary_file_name_override: wireguard
         command: >
@@ -122,8 +123,6 @@ collections:
             servicePort: 51820
         systemd:
           service_properties:
-            User: wireguard
-            ExecStart: /usr/local/bin/wg-quick up wg0
             ExecStop: /usr/local/bin/wg-quick down wg0
             Restart: on-failure
 ```

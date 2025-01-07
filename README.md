@@ -127,6 +127,64 @@ collections:
             Restart: on-failure
 ```
 
+- Provision an Ethereum execution and consensus client connected to the Sepolia testnet and monitor with the XATU service
+
+```
+- name: Configure Ethereum execution layer clients
+  hosts: EthereumSepolia
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: systemd
+        name: reth
+        user: ubuntu
+        binary_url: https://github.com/paradigmxyz/reth/releases/download/v1.1.4/reth-v1.1.4-x86_64-unknown-linux-gnu.tar.gz
+        binary_file_name_override: reth
+        command: >
+          /usr/local/bin/reth node --full --chain=sepolia --http --http.addr 0.0.0.0 --http.api "admin,debug,eth,net,txpool,web3,rpc,reth,ots,flashbots,miner" --metrics 0.0.0.0:8085
+        cpus: 50
+        memory: 5G
+        config:
+          reth.toml:
+            destinationPath: /home/ubuntu/reth.toml
+            data: |
+              # add configuration values
+
+- name: Configure Ethereum consensus layer clients
+  hosts: EthereumSepolia
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: systemd
+        name: lighthouse
+        user: ubuntu
+        binary_url: https://github.com/sigp/lighthouse/releases/download/v6.0.0/lighthouse-v6.0.0-x86_64-unknown-linux-gnu.tar.gz
+        binary_file_name_override: lighthouse
+        command: >
+          lighthouse bn --network sepolia --checkpoint-sync-url https://checkpoint-sync.sepolia.ethpandaops.io/
+          --execution-endpoint http://localhost:8551 --execution-jwt /home/ahmad/.local/share/reth/sepolia/jwt.hex
+          --http --http-address 0.0.0.0
+          --metrics --metrics-address 0.0.0.0 --metrics-port 8086
+        cpus: 50
+        memory: 5G
+
+- name: Configure XATU server for analytics
+  hosts: EthereumSepolia
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: container
+        name: xatu-server
+        image: ethpandaops/xatu:latest
+        command: sentry --preset ethpandaops --beacon-node-url=http://localhost:5052 --output-authorization="Basic bXlzdGljbWFuYWdlcjQ0OjYyNGM2MTZiLTgyNDAtNGUzNC05NDM1LWQyNTcxOTQwNGQzNQ=="
+        cpus: 0.5
+        memory: 5g
+        network_mode: host
+```
+
 ## License
 
 MIT

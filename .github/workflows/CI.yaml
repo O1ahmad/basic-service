@@ -21,7 +21,7 @@ jobs:
   molecule:
     strategy:
       matrix:
-        scenario: [systemd-basic]
+        scenario: [systemd-basic, container-basic]
     runs-on: ubuntu-latest
 
     steps:

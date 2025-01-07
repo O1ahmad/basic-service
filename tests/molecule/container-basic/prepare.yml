@@ -1,0 +1,13 @@
+---
+- name: Ensure Python is installed
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure apk is updated
+      raw: apk update
+
+    - name: Install system dependencies (sudo, Python, pip)
+      raw: apk add --no-cache sudo python3 py3-pip
+
+    - name: Install python dependencies
+      raw: pip install pytest-testinfra molecule-docker

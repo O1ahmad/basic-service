@@ -27,7 +27,7 @@ Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (f
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |
 |   _config_env_   |  environment variables to set within the service runtime   |       `{}`       |
 |     _ports_     |          listening port information for a service          |       `{}`       |
-|    _data_dir_    |  directory mappings to store service runtime/operational data |      `{}`      |
+|    _data_dirs_    |  directory mappings to store service runtime/operational data |      `{}`      |
 |  _host_data_dir_  |   host directory for general deployment operations    |    `/var/tmp`    |
 |     _cpus_      |  CPU resources each deployed service can use (either percentage for systemd or cores for containers)   |      `100`       |
 |    _memory_     | available memory resources each deployed service can use |       `1G`       |

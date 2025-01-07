@@ -1,5 +1,5 @@
 ---
-- name: Ensure Python is installed
+- name: Ensure test-dependencies are installed
   hosts: all
   gather_facts: false
   tasks:

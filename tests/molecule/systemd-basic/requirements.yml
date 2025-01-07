@@ -1,5 +1,0 @@
----
-roles:
-  - name: ansible-role-systemd
-    src: https://github.com/O1ahmad/ansible-role-systemd.git
-    version: v0.3.9

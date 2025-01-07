@@ -1,0 +1,8 @@
+# Ignore Python bytecode and cache directories
+__pycache__/
+*.py[cod]
+tests/molecule/config/pytestdebug.log
+**/pytestdebug.log
+
+# Ignore any nested __pycache__ directories
+**/__pycache__/

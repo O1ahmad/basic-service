@@ -1,0 +1,21 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    ansible_user: root
+  roles:
+    # Test the container setup mode of the basic-service role
+    - role: basic-service
+      vars:
+        setup_mode: container
+        name: nginx-container
+        image: nginx:latest
+        command: nginx -g "daemon off;"
+        cpus: 0.5
+        memory: 128M
+        network_mode: bridge
+        ports:
+          http:
+            ingressPort: 8080
+            servicePort: 80

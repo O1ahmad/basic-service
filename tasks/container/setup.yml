@@ -1,9 +1,9 @@
 ---
 # Compile container resource lists
 
-- name: Determine service container volume list
+- name: Add config DIRs to container volume list
   ansible.builtin.set_fact:
-    volume_list: "{{ volume_list + [item.value.destinationPath | dirname + ':' + item.value.destinationPath | dirname] }}"
+    volume_list: "{{ volume_list + [host_data_dir + item.value.destinationPath + ':' + item.value.destinationPath] }}"
   with_dict: "{{ config }}"
 
 - name: Add data DIRs to container volume list

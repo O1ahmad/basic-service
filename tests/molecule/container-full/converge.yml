@@ -1,0 +1,37 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: container
+        name: full-container
+        image: prom/prometheus:latest
+        user: root
+        command: --config.file=/etc/prometheus/prometheus.yml
+        cpus: 2
+        memory: 1024M
+        network_mode: bridge
+        ports:
+          prometheus:
+            ingressPort: 9090
+            servicePort: 9090
+        config:
+          prometheus-config:
+            destinationPath: /etc/prometheus/prometheus.yml
+            data: |
+              global:
+                scrape_interval: 15s
+                evaluation_interval: 15s
+
+              scrape_configs:
+                - job_name: 'prometheus'
+                  static_configs:
+                    - targets: ['localhost:9090']
+        config_env:
+          PROMETHEUS_STORAGE_PATH: "/prometheus"
+        data_dirs:
+          prometheus-data:
+            hostPath: /tmp/
+            appPath: /prometheus

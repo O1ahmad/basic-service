@@ -13,7 +13,7 @@ platforms:
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /var/tmp:/var/tmp
+      - /test/mnt:/test/mnt
 provisioner:
   name: ansible
   playbooks:

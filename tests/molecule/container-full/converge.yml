@@ -17,6 +17,7 @@
           prometheus:
             ingressPort: 9090
             servicePort: 9090
+        host_data_dir: /test/mnt
         config:
           prometheus-config:
             destinationPath: /etc/prometheus/prometheus.yml
@@ -35,3 +36,5 @@
           prometheus-data:
             hostPath: /tmp/
             appPath: /prometheus
+        restart_policy: always
+        uninstall: false

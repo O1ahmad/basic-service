@@ -22,6 +22,7 @@
   community.docker.docker_container:
     name: "{{ name }}"
     image: "{{ image }}"
+    user: "{{ user | default('root') }}"
     command: "{{ command | default(omit) }}"
     env: "{{ config_env }}"
     published_ports: "{{ port_list }}"

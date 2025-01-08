@@ -10,7 +10,8 @@
         user: root
         binary_url: https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz
         binary_strip_components: 1
-        command: /usr/local/bin/prometheus --config.file=/var/tmp/etc/prometheus/prometheus.yml
+        destination_directory: /usr/bin
+        command: /usr/bin/prometheus --config.file=/test/mnt/etc/prometheus/prometheus.yml
         cpus: 50
         memory: 512M
         config:
@@ -19,7 +20,17 @@
             data: |
               global:
                 scrape_interval: 15s
+                evaluation_interval: 15s
+
               scrape_configs:
                 - job_name: prometheus
                   static_configs:
                     - targets: ["localhost:9090"]
+        config_env:
+          PROMETHEUS_STORAGE_PATH: /prometheus
+        host_data_dir: /test/mnt
+        data_dirs:
+          prometheus_data:
+            hostPath: /var/tmp/prometheus
+            appPath: /var/tmp/prometheus
+        restart_policy: on-failure

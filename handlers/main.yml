@@ -1,4 +1,12 @@
 ---
+# --- Container Handlers ---
+- name: Container uninstall
+  listen: Uninstall Service
+  community.docker.docker_container:
+    name: "{{ name }}"
+    state: absent
+  when: setup_mode == 'container'
+
 # --- Storage Handlers ---
 - name: Remove host data directory
   listen: Uninstall Service
@@ -59,14 +67,6 @@
   when:
     - setup_mode == 'systemd'
     - destination_directory is defined
-
-# --- Container Handlers ---
-- name: Container uninstall
-  listen: Uninstall Service
-  community.docker.docker_container:
-    name: "{{ name }}"
-    state: absent
-  when: setup_mode == 'container'
 
 # --- Kubernetes Handlers ---
 - name: Uninstall Helm release

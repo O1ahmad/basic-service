@@ -21,4 +21,11 @@ verifier:
   name: testinfra
   directory: ./tests
 scenario:
-  name: container-full
+  name: container-uninstall
+  test_sequence:
+    - dependency
+    - create
+    - prepare
+    - converge
+    - verify
+    - destroy

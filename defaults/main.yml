@@ -62,7 +62,7 @@ network_mode: bridge
 ### Systemd ###
 binary_url:
 # (Optional) Override the binary file name after moving it to the destination directory
-binary_file_name_override:
+# binary_file_name_override:
 
 cpus: 100
 memory: 1G

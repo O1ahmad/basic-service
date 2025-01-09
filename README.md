@@ -12,7 +12,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 
 ## Requirements
 
-Systemd, [Docker SDK](https://docker-py.readthedocs.io/en/stable/) for Python (for Python 2.6 support, use the deprecated `docker-py` library instead), installation of the `docker` engine or a Kubernetes cluster.
+`Systemd`, installation of the `docker` engine or a `Kubernetes` cluster.
 
 ## Role Variables
 

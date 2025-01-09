@@ -1,0 +1,69 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        uninstall: false
+        setup_mode: systemd
+        name: sample-service
+        user: root
+        binary_url: https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz
+        binary_strip_components: 1
+        destination_directory: /usr/bin
+        binary_file_name_override: prometheus
+        command: /usr/bin/prometheus --config.file=/test/mnt/etc/prometheus/prometheus.yml
+        cpus: 50
+        memory: 512M
+        config:
+          prometheus.yml:
+            destinationPath: /etc/prometheus/prometheus.yml
+            data: |
+              global:
+                scrape_interval: 15s
+                evaluation_interval: 15s
+              scrape_configs:
+                - job_name: prometheus
+                  static_configs:
+                    - targets: ["localhost:9090"]
+        config_env:
+          PROMETHEUS_STORAGE_PATH: /prometheus
+        host_data_dir: /test/mnt
+        data_dirs:
+          prometheus_data:
+            hostPath: /var/tmp/prometheus
+            appPath: /var/tmp/prometheus
+        restart_policy: on-failure
+    - role: basic-service
+      vars:
+        uninstall: true
+        setup_mode: systemd
+        name: sample-service
+        user: root
+        binary_url: https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz
+        binary_strip_components: 1
+        destination_directory: /usr/bin
+        binary_file_name_override: prometheus
+        command: /usr/bin/prometheus --config.file=/test/mnt/etc/prometheus/prometheus.yml
+        cpus: 50
+        memory: 512M
+        config:
+          prometheus.yml:
+            destinationPath: /etc/prometheus/prometheus.yml
+            data: |
+              global:
+                scrape_interval: 15s
+                evaluation_interval: 15s
+              scrape_configs:
+                - job_name: prometheus
+                  static_configs:
+                    - targets: ["localhost:9090"]
+        config_env:
+          PROMETHEUS_STORAGE_PATH: /prometheus
+        host_data_dir: /test/mnt
+        data_dirs:
+          prometheus_data:
+            hostPath: /var/tmp/prometheus
+            appPath: /var/tmp/prometheus
+        restart_policy: on-failure

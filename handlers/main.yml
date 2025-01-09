@@ -58,7 +58,6 @@
     state: absent
   when:
     - setup_mode == 'systemd'
-    - binary_file_name is defined
     - destination_directory is defined
 
 # --- Container Handlers ---

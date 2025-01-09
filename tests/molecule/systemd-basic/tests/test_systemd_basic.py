@@ -1,5 +1,5 @@
 def test_service_running_and_enabled(host):
-    service = host.service("sample-service")
+    service = host.service("test-service")
     # Check that the systemd service is running and enabled
     assert service.is_running
     assert service.is_enabled

@@ -21,7 +21,13 @@ jobs:
   molecule:
     strategy:
       matrix:
-        scenario: [systemd-basic, systemd-full, systemd-uninstall, container-basic, container-full]
+        scenario:
+          - systemd-basic
+          - systemd-full
+          - systemd-uninstall
+          - container-basic
+          - container-full
+          - container-uninstall
     runs-on: ubuntu-latest
 
     steps:

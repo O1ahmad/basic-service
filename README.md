@@ -47,7 +47,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 | :-------------: | :--------------------------------------------------------: | :--------------: |
 |     _binary_url_     |             URL of the binary file to download              |    ` `    |
 |     _binary_file_name_override_     |             Override the binary file name after moving it to the destination directory              |    ` `    |
-|    _binary_strip_components_     | Strip NUMBER leading components from file names on extraction | `0` |
+|    _binary_strip_components_     | Strip NUMBER leading components/directories from file names on extraction | `0` |
 |     _destination_directory_     |             directory where the binary file will be placed after downloading/extracting              |    `/usr/local/bin`    |
 |   _systemd_   |    custom service type & unit, service and install properties    |     `{}`      |
 

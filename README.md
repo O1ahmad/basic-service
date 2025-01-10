@@ -179,7 +179,7 @@ collections:
         setup_mode: container
         name: xatu-server
         image: ethpandaops/xatu:latest
-        command: sentry --preset ethpandaops --beacon-node-url=http://localhost:5052 --output-authorization="Basic bXlzdGljbWFuYWdlcjQ0OjYyNGM2MTZiLTgyNDAtNGUzNC05NDM1LWQyNTcxOTQwNGQzNQ=="
+        command: sentry --preset ethpandaops --beacon-node-url=http://localhost:5052 --output-authorization="Basic <redacted>"
         cpus: 0.5
         memory: 5g
         network_mode: host

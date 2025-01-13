@@ -15,8 +15,8 @@
     default_unit_service:
       Type: "{{ systemd.service_type | default('simple') }}"
       ExecStart: "{{ command | default(name) }}"
-      User: "{{ user | default(omit) }}"
-      Group: "{{ group | default(user) | default(omit) }}"
+      User: "{{ user | default(ansible_user) }}"
+      Group: "{{ group | default(user) | default(ansible_user) }}"
       Environment: "{{ systemd_environment_directive }}"
       CPUQuota: "{{ cpus }}%"
       MemoryHigh: "{{ memory }}"

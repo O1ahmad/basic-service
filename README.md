@@ -24,6 +24,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 |     _name_      |                 name of service to deploy                  |    **required**    |
 |     _command_     |             Command and arguments to execute on startup              |    **required**    |
 |     _user_     |             service user to setup              |    `<operatoring-user>`    |
+|     _group_     |             service group to setup              |    `<operatoring-user>`    |
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |
 |   _config_env_   |  environment variables to set within the service runtime   |       `{}`       |
 |     _ports_     |          listening port information for a service          |       `{}`       |

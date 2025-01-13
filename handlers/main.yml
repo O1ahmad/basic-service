@@ -15,6 +15,7 @@
     state: absent
   when:
     - host_data_dir is defined
+    - host_data_dir | length > 0
     - host_data_dir != "/var/tmp"
 
 - name: Remove configuration directories

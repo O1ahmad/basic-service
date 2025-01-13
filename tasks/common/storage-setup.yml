@@ -1,6 +1,6 @@
 ---
 - name: Ensure existence of host data dir
-  when: host_data_dir is defined
+  when: host_data_dir is defined and host_data_dir | length > 0
   become: true
   ansible.builtin.file:
     path: "{{ host_data_dir }}"

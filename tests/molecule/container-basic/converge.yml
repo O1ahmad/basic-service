@@ -19,3 +19,4 @@
           http:
             ingressPort: 8080
             servicePort: 80
+        host_data_dir: /var/tmp

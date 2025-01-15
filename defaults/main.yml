@@ -12,6 +12,9 @@ host_data_dir: ''
 command:
 # sleep infinity
 
+cpus: 100
+memory: 1G
+
 ports: {}
 # example-port1:
 #   ingressPort: 80
@@ -19,6 +22,7 @@ ports: {}
 # example-port2:
 #   ingressPort: 443
 #   servicePort: 2412
+setup_iptables: false
 
 config: {}
 # example-config1:
@@ -52,9 +56,10 @@ data_dirs: {}
 #   appPath: /app/data
 
 restart_policy: on-failure
-uninstall: false
 volume_list: []
 port_list: []
+
+uninstall: false
 
 ### Container ###
 image:
@@ -62,11 +67,10 @@ network_mode: bridge
 
 ### Systemd ###
 binary_url:
+binary_strip_components: 0
+
 # (Optional) Override the binary file name after moving it to the destination directory
 # binary_file_name_override:
-
-cpus: 100
-memory: 1G
 
 systemd: {}
 # service_type: e.g. simple, oneshot, forking (https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#Type=)
@@ -75,13 +79,8 @@ systemd: {}
 # install_properties: {}
 
 systemd_environment_directive: ""
-binary_strip_components: 0
 
 ### Kubernetes ###
 helm_chart_path: ../../helm
 helm_namespace: default
 helm_values_path: values.yml
-
-###
-
-setup_iptables: false

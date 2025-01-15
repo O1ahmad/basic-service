@@ -5,44 +5,46 @@
     state: directory
     mode: "0755"
 
-- name: Set Binary file name based on URL
+- name: Set binary file name based on URL
   ansible.builtin.set_fact:
     binary_file_name: "{{ binary_url | basename }}"
+    binary_file_path: "/tmp/{{ binary_url | basename }}"
+    target_binary_path: "{{ destination_directory }}/{{ binary_file_name_override | default(binary_url | basename) }}"
 
 - name: Download the binary file
   ansible.builtin.get_url:
     url: "{{ binary_url }}"
-    dest: /tmp/{{ binary_file_name }}
+    dest: "{{ binary_file_path }}"
     mode: "0755"
 
-- name: Unarchive the file if it's an archive
-  ansible.builtin.unarchive:
-    src: /tmp/{{ binary_file_name }}
-    dest: "{{ destination_directory }}"
-    remote_src: true
-    extra_opts:
-      - "--strip-components={{ binary_strip_components }}"
-  when: >
-    binary_file_name.endswith('.tar') or binary_file_name.endswith('.tar.gz') or
-    binary_file_name.endswith('.tgz') or binary_file_name.endswith('.zip')
+- name: Handle binary file based on type
+  block:
+    - name: Unarchive the file if it's an archive
+      ansible.builtin.unarchive:
+        src: "{{ binary_file_path }}"
+        dest: "{{ destination_directory }}"
+        remote_src: true
+        extra_opts:
+          - "--strip-components={{ binary_strip_components }}"
+      when: binary_file_name | regex_search('\.(tar|tar\.gz|tgz|zip)$')
 
-- name: Move the file if it's not an archive
-  ansible.builtin.command: >
-    mv /tmp/{{ binary_file_name }} {{ destination_directory }}/{{ binary_file_name_override | default(binary_file_name) }}
-  when: >
-    not (binary_file_name.endswith('.tar') or
-         binary_file_name.endswith('.tar.gz') or
-         binary_file_name.endswith('.tgz') or
-         binary_file_name.endswith('.zip'))
-  register: mv_output
-  changed_when: mv_output.rc != 0
+    - name: Move the file if it's not an archive
+      ansible.builtin.command: >
+        mv {{ binary_file_path }} {{ target_binary_path }}
+      register: mv_output
+      changed_when: mv_output.rc != 0
+      when: not (binary_file_name | regex_search('\.(tar|tar\.gz|tgz|zip)$'))
 
-- name: Ensure the file has executable permissions
-  ansible.builtin.file:
-    path: "{{ destination_directory }}/{{ binary_file_name_override | default(binary_file_name) }}"
-    mode: "0755"
-  when: >
-    not (binary_file_name.endswith('.tar') or
-         binary_file_name.endswith('.tar.gz') or
-         binary_file_name.endswith('.tgz') or
-         binary_file_name.endswith('.zip'))
+- name: Check if the binary override file exists
+  ansible.builtin.stat:
+    path: "{{ destination_directory }}/{{ binary_file_name_override }}"
+  register: binary_override_file_stat
+  when:
+    - binary_file_name_override is defined
+
+- name: Fail if the binary override file does not exist
+  ansible.builtin.fail:
+    msg: "The binary file does not exist at {{ destination_directory }}/{{ binary_file_name_override }}."
+  when:
+    - binary_file_name_override is defined
+    - not binary_override_file_stat.stat.exists

@@ -35,3 +35,8 @@
             hostPath: /var/tmp/prometheus
             appPath: /var/tmp/prometheus
         restart_policy: on-failure
+        setup_iptables: true
+        ports:
+          prometheus:
+            ingressPort: 9090
+            servicePort: 9090

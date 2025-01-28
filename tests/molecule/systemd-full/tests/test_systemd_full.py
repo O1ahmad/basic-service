@@ -69,3 +69,12 @@ def test_service_logs_no_errors(host):
     assert logs.rc == 0, "Failed to fetch systemd logs for the service."
     assert "error" not in logs.stdout.lower(), "Systemd logs contain errors."
     assert "failed" not in logs.stdout.lower(), "Systemd logs indicate failure."
+
+def test_iptables_prometheus_port(host):
+    """Verify that the ingress ports are allowed in iptables."""
+    # Check if the iptables rule for port 9090 exists
+    iptables_output = host.run("iptables -L INPUT -v -n")
+    assert iptables_output.rc == 0, "Failed to list iptables rules."
+
+    # Verify that the rule allowing TCP traffic on port 9090 exists
+    assert "9090" in iptables_output.stdout, "The iptables rule for port 9090 is missing."

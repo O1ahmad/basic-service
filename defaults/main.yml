@@ -58,6 +58,7 @@ data_dirs: {}
 restart_policy: on-failure
 volume_list: []
 port_list: []
+_ingress_list: []
 
 uninstall: false
 

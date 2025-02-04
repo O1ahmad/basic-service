@@ -2,33 +2,6 @@
 - name: Download service binary
   ansible.builtin.include_tasks: ../common/download-binary.yml
 
-- name: Determine service Environment directives
-  ansible.builtin.set_fact:
-    systemd_environment_directive: "{{ systemd_environment_directive + ' ' + item.key + '=' + item.value }}"
-  with_dict: "{{ config_env }}"
-
-- name: Set default Systemd unit configurations
-  ansible.builtin.set_fact:
-    default_unit_info:
-      Wants: network-online.target
-      After: syslog.target network-online.target
-    default_unit_service:
-      Type: "{{ systemd.service_type | default('simple') }}"
-      ExecStart: "{{ command | default(name) }}"
-      User: "{{ user | default(ansible_user) }}"
-      Group: "{{ group | default(user) | default(ansible_user) }}"
-      Environment: "{{ systemd_environment_directive }}"
-      CPUQuota: "{{ cpus }}%"
-      MemoryHigh: "{{ memory }}"
-      Restart: "{{ restart_policy }}"
-    default_unit_install:
-      WantedBy: multi-user.target
-    custom_unit_properties: "{{ systemd.unit_properties | default({}) }}"
-    custom_service_properties: "{{ systemd.service_properties | default({}) }}"
-    custom_install_properties: "{{ systemd.install_properties | default({}) }}"
-
-# ---
-
 - name: Start service systemd unit
   ansible.builtin.include_role:
     name: ansible-role-systemd
@@ -37,6 +10,6 @@
       - name: "{{ name }}"
         state: started
         enabled: true
-        Unit: "{{ default_unit_info | combine(custom_unit_properties) }}"
-        Service: "{{ default_unit_service | combine(custom_service_properties) }}"
-        Install: "{{ default_unit_install | combine(custom_install_properties) }}"
+        Unit: "{{ _default_unit_info | combine(_custom_unit_properties) }}"
+        Service: "{{ _default_unit_service | combine(_custom_service_properties) }}"
+        Install: "{{ _default_unit_install | combine(_custom_install_properties) }}"

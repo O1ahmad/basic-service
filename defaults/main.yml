@@ -49,11 +49,14 @@ config: {}
 
 config_env: {}
 # RUN_ARGS: --help
+_config_file_names: []
+_config_file_directories: []
 
 data_dirs: {}
 # chain-data:
 #   hostPath: /mnt/data
 #   appPath: /app/data
+_data_dirs_hostpaths: []
 
 restart_policy: on-failure
 volume_list: []
@@ -65,10 +68,13 @@ uninstall: false
 ### Container ###
 image:
 network_mode: bridge
+_volume_list: []
+_port_list: []
 
 ### Systemd ###
 binary_url:
 binary_strip_components: 0
+_systemd_environment_directive: ''
 
 # (Optional) Override the binary file name after moving it to the destination directory
 # binary_file_name_override:

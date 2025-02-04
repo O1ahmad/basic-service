@@ -1,5 +1,5 @@
 ---
-- name: Ensure existence of host data dir
+- name: Ensure existence of host data directory [{{ host_data_dir }}]
   when: host_data_dir is defined and host_data_dir | length > 0
   become: true
   ansible.builtin.file:
@@ -9,7 +9,7 @@
     group: "{{ group | default(user) | default(ansible_user) }}"
     mode: "0755"
 
-- name: Ensure existence of config dir
+- name: Ensure existence of config directories {{ _config_file_directories }}
   become: true
   ansible.builtin.file:
     path: "{{ host_data_dir + item.value.destinationPath | dirname }}"
@@ -19,7 +19,7 @@
     mode: "0755"
   with_dict: "{{ config }}"
 
-- name: Generate local rendering of service config files
+- name: Generate local rendering of service config files {{ _config_file_names }}
   ansible.builtin.copy:
     content: "{{ item.value.data | default(omit) }}"
     dest: "{{ host_data_dir + item.value.destinationPath }}"
@@ -29,7 +29,7 @@
     group: "{{ group | default(user) | default(ansible_user) }}"
   with_dict: "{{ config }}"
 
-- name: Ensure existence of host data dirs
+- name: Ensure existence of host data directories {{ _data_dirs_hostpaths }}
   become: true
   ansible.builtin.file:
     path: "{{ item.value.hostPath }}"

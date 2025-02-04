@@ -68,6 +68,7 @@
   when:
     - setup_mode == 'systemd'
     - destination_directory is defined
+    - binary_file_name is defined
 
 # --- Kubernetes Handlers ---
 - name: Uninstall Helm release

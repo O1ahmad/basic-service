@@ -1,23 +1,4 @@
 ---
-# Compile container resource lists
-
-- name: Add config DIRs to container volume list
-  ansible.builtin.set_fact:
-    volume_list: "{{ volume_list + [host_data_dir + item.value.destinationPath + ':' + item.value.destinationPath] }}"
-  with_dict: "{{ config }}"
-
-- name: Add data DIRs to container volume list
-  ansible.builtin.set_fact:
-    volume_list: "{{ volume_list + [item.value.hostPath + ':' + item.value.appPath] }}"
-  with_dict: "{{ data_dirs }}"
-
-- name: Determine service container port list
-  ansible.builtin.set_fact:
-    port_list: "{{ port_list + [item.value.ingressPort | string + ':' + item.value.servicePort | string] }}"
-  with_dict: "{{ ports }}"
-
-# ---
-
 - name: Start service container
   community.docker.docker_container:
     name: "{{ name }}"
@@ -25,9 +6,9 @@
     user: "{{ user | default('root') }}"
     command: "{{ command | default(omit) }}"
     env: "{{ config_env }}"
-    published_ports: "{{ port_list }}"
+    published_ports: "{{ _port_list }}"
     network_mode: "{{ network_mode }}"
-    volumes: "{{ volume_list }}"
+    volumes: "{{ _volume_list }}"
     cpus: "{{ cpus }}"
     memory: "{{ memory }}"
     restart_policy: "{{ restart_policy }}"

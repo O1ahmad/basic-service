@@ -1,0 +1,83 @@
+---
+# --- Common ---
+
+- name: Set fact for config file directories
+  set_fact:
+    _config_file_directories: >-
+      {{
+        _config_file_directories | default([]) +
+        [host_data_dir + item.value.destinationPath | dirname]
+      }}
+    _config_file_names: >-
+      {{
+        _config_file_names | default([]) +
+        [host_data_dir + item.value.destinationPath | basename]
+      }}
+  with_dict: "{{ config }}"
+  loop_control:
+    label: "{{ item.key }}"
+
+- name: Set fact for data_dirs hostPaths
+  set_fact:
+    _data_dirs_hostpaths: >-
+      {{
+        _data_dirs_hostpaths | default([]) +
+        [item.value.hostPath]
+      }}
+  with_dict: "{{ data_dirs }}"
+  loop_control:
+    label: "{{ item.key }}"
+
+- name: Determine service ingress port list for iptables config
+  ansible.builtin.set_fact:
+    _ingress_list: "{{ _ingress_list + [item.value.ingressPort | string] }}"
+  loop: "{{ ports | dict2items }}"
+  when: item.value.ingressPort is defined
+
+- name: Ensure ingress_list {{ _ingress_list }} contains valid port numbers
+  ansible.builtin.set_fact:
+    _ingress_list: "{{ _ingress_list | select('match', '^[0-9]+$') | list }}"
+
+# --- Systemd ---
+
+- name: Determine service Environment directives
+  ansible.builtin.set_fact:
+    _systemd_environment_directive: "{{ systemd_environment_directive + ' ' + item.key + '=' + item.value }}"
+  with_dict: "{{ config_env }}"
+
+- name: Set default Systemd unit configurations
+  ansible.builtin.set_fact:
+    _default_unit_info:
+      Wants: network-online.target
+      After: syslog.target network-online.target
+    _default_unit_service:
+      Type: "{{ systemd.service_type | default('simple') }}"
+      ExecStart: "{{ command | default(name) }}"
+      User: "{{ user | default(ansible_user) }}"
+      Group: "{{ group | default(user) | default(ansible_user) }}"
+      Environment: "{{ _systemd_environment_directive }}"
+      CPUQuota: "{{ cpus }}%"
+      MemoryHigh: "{{ memory }}"
+      Restart: "{{ restart_policy }}"
+    _default_unit_install:
+      WantedBy: multi-user.target
+    _custom_unit_properties: "{{ systemd.unit_properties | default({}) }}"
+    _custom_service_properties: "{{ systemd.service_properties | default({}) }}"
+    _custom_install_properties: "{{ systemd.install_properties | default({}) }}"
+
+# --- Container ---
+
+- name: Add config DIRs to container volume list
+  ansible.builtin.set_fact:
+    _volume_list: "{{ _volume_list + [host_data_dir + item.value.destinationPath + ':' + item.value.destinationPath] }}"
+  with_dict: "{{ config }}"
+
+- name: Add data DIRs to container volume list
+  ansible.builtin.set_fact:
+    _volume_list: "{{ _volume_list + [item.value.hostPath + ':' + item.value.appPath] }}"
+  with_dict: "{{ data_dirs }}"
+
+- name: Determine service container port list
+  ansible.builtin.set_fact:
+    _port_list: "{{ _port_list + [item.value.ingressPort | string + ':' + item.value.servicePort | string] }}"
+  with_dict: "{{ ports }}"

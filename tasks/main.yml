@@ -1,4 +1,7 @@
 ---
+- name: Load custom facts
+  ansible.builtin.include_tasks: common/custom-facts.yml
+
 - name: Uninstall provisioned service components
   when: uninstall | bool
   block:

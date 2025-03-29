@@ -16,7 +16,7 @@
       vars:
         unit_config:
           - name: "{{ name }}"
-            state: absent
+            state: stopped
             enabled: false
         perform_uninstall: true
       when: setup_mode == 'systemd'

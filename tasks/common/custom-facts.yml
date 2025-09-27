@@ -59,6 +59,7 @@
       CPUQuota: "{{ cpus }}%"
       MemoryHigh: "{{ memory }}"
       Restart: "{{ restart_policy }}"
+      IPAccounting: "{{ 'yes' if systemd.enable_network_accounting | default(true) else omit }}"
     _default_unit_install:
       WantedBy: multi-user.target
     _custom_unit_properties: "{{ systemd.unit_properties | default({}) }}"

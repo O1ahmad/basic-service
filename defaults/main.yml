@@ -80,10 +80,12 @@ _systemd_environment_directive: ''
 # binary_file_name_override:
 
 systemd: {}
-# service_type: e.g. simple, oneshot, forking (https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#Type=)
+# service_type: e.g. simple, oneshot, forking
+# (https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#Type=)
 # unit_properties: {}
 # service_properties: {}
 # install_properties: {}
+# enable_network_accounting: true
 
 systemd_environment_directive: ""
 

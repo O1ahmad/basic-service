@@ -78,3 +78,13 @@ def test_iptables_prometheus_port(host):
 
     # Verify that the rule allowing TCP traffic on port 9090 exists
     assert "9090" in iptables_output.stdout, "The iptables rule for port 9090 is missing."
+
+def test_systemd_ip_accounting(host):
+    """Verify that IP accounting is enabled and working."""
+    service_content = host.file("/etc/systemd/system/test-service.service").content_string
+    assert "IPAccounting=yes" in service_content, "IPAccounting directive is missing from the service file."
+
+    # Verify systemd tracks network data
+    accounting_output = host.run("systemctl show test-service --property=IPIngressBytes,IPEgressBytes")
+    assert accounting_output.rc == 0, "Failed to get IP accounting data from systemd."
+    assert "IPIngressBytes=" in accounting_output.stdout and "IPEgressBytes=" in accounting_output.stdout, "IP accounting data is not available."

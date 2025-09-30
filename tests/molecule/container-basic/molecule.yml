@@ -21,3 +21,15 @@ verifier:
   directory: ./tests
 scenario:
   name: container-basic
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy

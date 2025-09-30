@@ -26,3 +26,15 @@ verifier:
   directory: ./tests
 scenario:
   name: systemd-full
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy

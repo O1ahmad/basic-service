@@ -2,7 +2,7 @@
 # --- Common ---
 
 - name: Set fact for config file directories
-  set_fact:
+  ansible.builtin.set_fact:
     _config_file_directories: >-
       {{
         _config_file_directories | default([]) +
@@ -18,7 +18,7 @@
     label: "{{ item.key }}"
 
 - name: Set fact for data_dirs hostPaths
-  set_fact:
+  ansible.builtin.set_fact:
     _data_dirs_hostpaths: >-
       {{
         _data_dirs_hostpaths | default([]) +
@@ -34,7 +34,7 @@
   loop: "{{ ports | dict2items }}"
   when: item.value.ingressPort is defined
 
-- name: Ensure ingress_list {{ _ingress_list }} contains valid port numbers
+- name: Ensure ingress_list contains valid port numbers {{ _ingress_list }}
   ansible.builtin.set_fact:
     _ingress_list: "{{ _ingress_list | select('match', '^[0-9]+$') | list }}"
 

@@ -24,6 +24,8 @@ scenario:
   name: container-uninstall
   test_sequence:
     - dependency
+    - cleanup
+    - destroy
     - create
     - prepare
     - converge

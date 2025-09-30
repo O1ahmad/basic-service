@@ -50,15 +50,20 @@
     _default_unit_info:
       Wants: network-online.target
       After: syslog.target network-online.target
-    _default_unit_service:
-      Type: "{{ systemd.service_type | default('simple') }}"
-      ExecStart: "{{ command | default(name) }}"
-      User: "{{ user | default(ansible_user) }}"
-      Group: "{{ group | default(user) | default(ansible_user) }}"
-      Environment: "{{ _systemd_environment_directive }}"
-      CPUQuota: "{{ cpus }}%"
-      MemoryHigh: "{{ memory }}"
-      Restart: "{{ restart_policy }}"
+    _default_unit_service: >-
+      {{
+        {
+          'Type': (systemd.service_type | default('simple')),
+          'ExecStart': (command | default(name)),
+          'User': (user | default(ansible_user)),
+          'Group': (group | default(user) | default(ansible_user)),
+          'Environment': _systemd_environment_directive,
+          'CPUQuota': (cpus | string ~ '%'),
+          'MemoryHigh': memory,
+          'Restart': restart_policy
+        }
+        | combine((systemd.enable_network_accounting | default(true)) | ternary({'IPAccounting': 'yes'}, {}), recursive=True)
+      }}
     _default_unit_install:
       WantedBy: multi-user.target
     _custom_unit_properties: "{{ systemd.unit_properties | default({}) }}"

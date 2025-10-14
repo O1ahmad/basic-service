@@ -26,14 +26,14 @@
         remote_src: true
         extra_opts:
           - "--strip-components={{ binary_strip_components }}"
-      when: binary_file_name | regex_search('\.(tar|tar\.gz|tgz|zip)$') | bool
+      when: binary_file_name is regex('\.(tar|tar\.gz|tgz|zip)$')
 
     - name: Move binary file [{{ binary_file_name }}] to [{{ target_binary_path }}]
       ansible.builtin.command: >
         mv {{ binary_file_path }} {{ target_binary_path }}
       register: mv_output
       changed_when: mv_output.rc != 0
-      when: not (binary_file_name | regex_search('\.(tar|tar\.gz|tgz|zip)$') | bool)
+      when: binary_file_name is not regex('\.(tar|tar\.gz|tgz|zip)$')
 
 - name: Check if the binary override file [{{ binary_file_name_override }}] exists at [{{ destination_directory }}]
   ansible.builtin.stat:

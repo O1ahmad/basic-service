@@ -4,6 +4,6 @@ exclude_paths:
   - ../.git/
   - ../.github
   - ../helm/
-  - ./*
+  - .ansible/
 warn_list:
   - experimental

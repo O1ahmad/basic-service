@@ -21,6 +21,7 @@ provisioner:
     prepare: ../prepare.yml
   env:
     ANSIBLE_ROLES_PATH: "../../../../"
+    ANSIBLE_ALLOW_BROKEN_CONDITIONALS: "True"
 verifier:
   name: testinfra
   directory: ./tests

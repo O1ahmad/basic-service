@@ -85,7 +85,7 @@ systemd: {}
 # unit_properties: {}
 # service_properties: {}
 # install_properties: {}
-# enable_network_accounting: true
+# enable_accounting: true
 
 systemd_environment_directive: ""
 

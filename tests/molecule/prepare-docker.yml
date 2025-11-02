@@ -10,4 +10,4 @@
       raw: apk add --no-cache sudo python3 py3-pip
 
     - name: Install python dependencies
-      raw: pip install pytest-testinfra molecule-docker
+      raw: pip3 install --break-system-packages --ignore-installed PyYAML pytest-testinfra molecule-docker

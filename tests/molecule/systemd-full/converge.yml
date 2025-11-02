@@ -41,4 +41,4 @@
             ingressPort: 9090
             servicePort: 9090
         systemd:
-          enable_network_accounting: true
+          enable_accounting: true

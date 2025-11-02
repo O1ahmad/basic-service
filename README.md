@@ -51,7 +51,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 |    _binary_strip_components_     | Strip NUMBER leading components/directories from file names on extraction | `0` |
 |     _destination_directory_     |             directory where the binary file will be placed after downloading/extracting              |    `/usr/local/bin`    |
 |   _systemd_   |    custom service type & unit, service and install properties    |     `{}`      |
-|   _systemd.enable_network_accounting_   |    enable IP accounting for network traffic tracking    |     `true`      |
+|   _systemd.enable_accounting_   |    enable systemd resource accounting (CPU, Memory, IO, Tasks, IP)    |     `true`      |
 
 ### Kubernetes (k8s)
 
@@ -124,7 +124,7 @@ collections:
             ingressPort: 51820
             servicePort: 51820
         systemd:
-          enable_network_accounting: true
+          enable_accounting: true
           service_properties:
             ExecStop: /usr/local/bin/wg-quick down wg0
             Restart: on-failure

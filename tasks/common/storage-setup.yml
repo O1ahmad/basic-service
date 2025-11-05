@@ -5,28 +5,31 @@
   ansible.builtin.file:
     path: "{{ host_data_dir }}"
     state: directory
-    owner: "{{ user | default(ansible_user) }}"
-    group: "{{ group | default(user) | default(ansible_user) }}"
+    owner: "{{ user | default(ansible_user_id) }}"
+    group: "{{ group | default(user) | default(ansible_user_id) }}"
     mode: "0755"
+    recurse: false
 
 - name: Ensure existence of config directories {{ _config_file_directories }}
   become: true
   ansible.builtin.file:
     path: "{{ host_data_dir + item.value.destinationPath | dirname }}"
     state: directory
-    owner: "{{ user | default(ansible_user) }}"
-    group: "{{ group | default(user) | default(ansible_user) }}"
+    owner: "{{ user | default(ansible_user_id) }}"
+    group: "{{ group | default(user) | default(ansible_user_id) }}"
     mode: "0755"
+    recurse: false
   with_dict: "{{ config }}"
 
 - name: Generate local rendering of service config files {{ _config_file_names }}
+  become: true
   ansible.builtin.copy:
     content: "{{ item.value.data | default(omit) }}"
     dest: "{{ host_data_dir + item.value.destinationPath }}"
-    mode: "{{ item.value.mode | default(644) }}"
+    mode: "{{ item.value.mode | default('0644') }}"
     src: "{{ item.value.sourcePath | default(omit) }}"
-    owner: "{{ user | default(ansible_user) }}"
-    group: "{{ group | default(user) | default(ansible_user) }}"
+    owner: "{{ user | default(ansible_user_id) }}"
+    group: "{{ group | default(user) | default(ansible_user_id) }}"
   with_dict: "{{ config }}"
 
 - name: Ensure existence of host data directories {{ _data_dirs_hostpaths }}
@@ -35,6 +38,6 @@
     path: "{{ item.value.hostPath }}"
     state: directory
     mode: "0755"
-    owner: "{{ user | default(ansible_user) }}"
-    group: "{{ group | default(user) | default(ansible_user) }}"
+    owner: "{{ user | default(ansible_user_id) }}"
+    group: "{{ group | default(user) | default(ansible_user_id) }}"
   with_dict: "{{ data_dirs }}"

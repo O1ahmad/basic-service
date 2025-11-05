@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: "{{ name }}"
     image: "{{ image }}"
-    user: "{{ user | default('root') }}"
+    user: root
     command: "{{ command | default(omit) }}"
     env: "{{ config_env }}"
     published_ports: "{{ _port_list }}"

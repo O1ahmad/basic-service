@@ -27,6 +27,10 @@
 - name: Setup service components
   when: uninstall is not defined or not uninstall | bool
   block:
+    - name: Ensure service user exists
+      ansible.builtin.include_tasks: common/user-setup.yml
+      when: user is defined
+
     - name: Manage storage/data setup
       ansible.builtin.include_tasks: common/storage-setup.yml
 

@@ -7,12 +7,12 @@
       vars:
         setup_mode: systemd
         name: test-service
-        user: root
+        user: prometheus
         binary_url: https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz
         binary_strip_components: 1
         binary_file_name_override: prometheus # set to trigger existence of extracted binary check
         destination_directory: /usr/bin
-        command: /usr/bin/prometheus --config.file=/test/mnt/etc/prometheus/prometheus.yml
+        command: /usr/bin/prometheus --config.file=/test/mnt/etc/prometheus/prometheus.yml --storage.tsdb.path=/var/tmp/prometheus
         cpus: 50
         memory: 512M
         config:

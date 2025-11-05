@@ -27,3 +27,14 @@ verifier:
   directory: ./tests
 scenario:
   name: systemd-basic
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify
+    - cleanup
+    - destroy

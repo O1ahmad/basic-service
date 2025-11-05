@@ -23,3 +23,14 @@ verifier:
   directory: ./tests
 scenario:
   name: container-full
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify
+    - cleanup
+    - destroy

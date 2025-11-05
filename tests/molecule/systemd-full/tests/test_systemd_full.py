@@ -11,7 +11,7 @@ def test_systemd_service_properties(host):
 
     # Verify key systemd properties
     assert "ExecStart=/usr/bin/prometheus --config.file=/test/mnt/etc/prometheus/prometheus.yml" in service_content, "ExecStart is not correctly set."
-    assert "User=root" in service_content, "The service user is not correctly set to root."
+    assert "User=prometheus" in service_content, "The service user is not correctly set to prometheus."
     assert "CPUQuota=50%" in service_content, "CPUQuota is not correctly set."
     assert "MemoryHigh=512M" in service_content, "MemoryHigh is not correctly set."
     assert "Restart=on-failure" in service_content, "Restart policy is not correctly set."
@@ -59,8 +59,8 @@ def test_data_directory_exists(host):
     data_dir = host.file("/var/tmp/prometheus")
     assert data_dir.exists, "The data directory does not exist."
     assert data_dir.is_directory, "The data directory is not a directory."
-    assert data_dir.user == "root", "The data directory is not owned by root."
-    assert data_dir.group == "root", "The data directory group is not root."
+    assert data_dir.user == "prometheus", "The data directory is not owned by prometheus."
+    assert data_dir.group == "prometheus", "The data directory group is not prometheus."
 
 
 def test_service_logs_no_errors(host):
@@ -88,3 +88,26 @@ def test_systemd_ip_accounting(host):
     accounting_output = host.run("systemctl show test-service --property=IPIngressBytes,IPEgressBytes")
     assert accounting_output.rc == 0, "Failed to get IP accounting data from systemd."
     assert "IPIngressBytes=" in accounting_output.stdout and "IPEgressBytes=" in accounting_output.stdout, "IP accounting data is not available."
+
+def test_service_group_exists(host):
+    """Verify that the prometheus service group was created."""
+    group = host.group("prometheus")
+    assert group.exists, "The prometheus group does not exist."
+    # System groups typically have GID < 1000
+    assert group.gid < 1000, f"The prometheus group is not a system group (GID: {group.gid})."
+
+def test_service_user_exists(host):
+    """Verify that the prometheus service user was created."""
+    user = host.user("prometheus")
+    assert user.exists, "The prometheus user does not exist."
+    assert user.shell == "/usr/sbin/nologin", "The prometheus user shell is not set to /usr/sbin/nologin."
+    assert user.group == "prometheus", "The prometheus user is not in the prometheus group."
+    # System users typically have UID < 1000
+    assert user.uid < 1000, f"The prometheus user is not a system user (UID: {user.uid})."
+
+def test_config_file_ownership(host):
+    """Verify that config files are owned by the prometheus user."""
+    config_file = host.file("/test/mnt/etc/prometheus/prometheus.yml")
+    assert config_file.exists, "The Prometheus configuration file does not exist."
+    assert config_file.user == "prometheus", "The config file is not owned by prometheus."
+    assert config_file.group == "prometheus", "The config file group is not prometheus."

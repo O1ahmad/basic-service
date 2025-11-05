@@ -9,7 +9,6 @@ def test_container_exposes_ports(host):
 def test_container_user_is_root(host):
     container = host.docker("full-container")
     user = container.inspect()["Config"]["User"]
-
     assert user == "root", f"Container user is not 'root', it is '{user}'."
 
 def test_container_creates_hostdirectory(host):

@@ -62,7 +62,10 @@
           'MemoryHigh': memory,
           'Restart': restart_policy
         }
-        | combine((systemd.enable_accounting | default(true)) | ternary({'CPUAccounting': 'yes', 'MemoryAccounting': 'yes', 'IOAccounting': 'yes', 'TasksAccounting': 'yes', 'IPAccounting': 'yes'}, {}), recursive=True)
+        | combine(
+          (systemd.enable_accounting | default(true)) |
+          ternary({'CPUAccounting': 'yes', 'MemoryAccounting': 'yes', 'IOAccounting': 'yes',
+                   'TasksAccounting': 'yes', 'IPAccounting': 'yes'}, {}), recursive=True)
       }}
     _default_unit_install:
       WantedBy: multi-user.target

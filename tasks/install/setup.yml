@@ -1,0 +1,3 @@
+---
+- name: Download tool binary
+  ansible.builtin.include_tasks: ../common/download-binary.yml

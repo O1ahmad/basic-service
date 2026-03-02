@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: install
+        name: test-tool
+        user: root
+        binary_url: https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
+        binary_file_name_override: jq-tool
+        command: /usr/local/bin/jq-tool --version

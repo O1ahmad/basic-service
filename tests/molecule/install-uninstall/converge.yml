@@ -1,0 +1,23 @@
+---
+- name: Converge - Install
+  hosts: all
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: install
+        name: tool-to-remove
+        binary_url: https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
+        binary_file_name_override: tool-to-remove
+
+- name: Converge - Uninstall
+  hosts: all
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: install
+        name: tool-to-remove
+        binary_url: https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
+        binary_file_name_override: tool-to-remove
+        uninstall: true

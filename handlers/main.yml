@@ -53,25 +53,29 @@
 # --- Systemd Handlers ---
 - name: Remove temporary binary file
   listen: Uninstall Service
+  vars:
+    _derived_binary_basename: "{{ (binary_url | default('', true)) | basename }}"
   ansible.builtin.file:
-    path: "/tmp/{{ binary_url | basename }}"
+    path: "/tmp/{{ _derived_binary_basename }}"
     state: absent
   when:
     - setup_mode in ['systemd', 'install']
     - binary_url is defined
-    - (binary_url | basename) | length > 0
-    - (binary_url | basename) != "."
+    - _derived_binary_basename | length > 0
+    - _derived_binary_basename != "."
 
 - name: Remove extracted files or moved binary
   listen: Uninstall Service
+  vars:
+    _derived_binary_name: "{{ binary_file_name_override | default((binary_url | default('', true)) | basename) }}"
   ansible.builtin.file:
-    path: "{{ destination_directory }}/{{ binary_file_name_override | default(binary_url | basename) }}"
+    path: "{{ destination_directory }}/{{ _derived_binary_name }}"
     state: absent
   when:
     - setup_mode in ['systemd', 'install']
     - destination_directory is defined
-    - (binary_file_name_override | default(binary_url | basename)) | length > 0
-    - (binary_file_name_override | default(binary_url | basename)) != "."
+    - _derived_binary_name | length > 0
+    - _derived_binary_name != "."
 
 # --- Kubernetes Handlers ---
 - name: Uninstall Helm release

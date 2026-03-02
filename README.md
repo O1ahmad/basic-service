@@ -20,7 +20,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |
-|   _setup_mode_   |  infrastructure provisioning setup mode (`container, k8s, systemd`)  |   `undefined`    |
+|   _setup_mode_   |  infrastructure provisioning setup mode (`container, k8s, systemd, install`)  |   `undefined`    |
 |     _name_      |                 name of service to deploy                  |    **required**    |
 |     _command_     |             Command and arguments to execute on startup              |    **required**    |
 |     _user_     |             service user to setup              |    `<operatoring-user>`    |
@@ -56,7 +56,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 ### Kubernetes (k8s)
 
 To authorize access to the target Kubernetes cluster, set the following environment variables:
-```
+```bash
 export KUBECONFIG=<path-to-the-kubeconfig-file>
 export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
 ```
@@ -74,7 +74,7 @@ export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
 
 ## Dependencies
 
-```
+```yaml
 roles:
 - name: ansible-role-systemd
   url: git+https://github.com/O1ahmad/ansible-role-systemd.git
@@ -89,7 +89,7 @@ collections:
 
 - Launch a Wireguard client which establishes a secure peer tunnel connection:
 
-```
+```yaml
 - name: Configure WireGuard VPN
   hosts: VPNServers
   remote_user: devops
@@ -132,7 +132,7 @@ collections:
 
 - Provision an Ethereum execution and consensus client connected to the Sepolia testnet and monitor with the XATU service
 
-```
+```yaml
 - name: Configure Ethereum execution layer clients
   hosts: EthereumSepolia
   become: true
@@ -186,6 +186,22 @@ collections:
         cpus: 0.5
         memory: 5g
         network_mode: host
+```
+
+- Install a tool (e.g. `curl`):
+
+```yaml
+- name: Install curl tool
+  hosts: all
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: install
+        name: curl
+        binary_url: https://github.com/moparisthebest/static-curl/releases/download/v8.12.1/curl-amd64
+        binary_strip_components: 1
+        binary_file_name_override: curl
 ```
 
 ## License

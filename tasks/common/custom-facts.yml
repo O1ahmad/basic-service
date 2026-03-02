@@ -55,8 +55,8 @@
         {
           'Type': (systemd.service_type | default('simple')),
           'ExecStart': (command | default(name)),
-          'User': (user | default(ansible_user)),
-          'Group': (group | default(user) | default(ansible_user)),
+          'User': (user | default(ansible_user_id)),
+          'Group': (group | default(user) | default(ansible_user_id)),
           'Environment': _systemd_environment_directive,
           'CPUQuota': (cpus | string ~ '%'),
           'MemoryHigh': memory,

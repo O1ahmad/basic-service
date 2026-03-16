@@ -1,6 +1,7 @@
 ---
 - name: Download service binary
   ansible.builtin.include_tasks: ../common/download-binary.yml
+  when: binary_url | default('', true) | length > 0
 
 - name: Start service systemd unit
   ansible.builtin.include_role:

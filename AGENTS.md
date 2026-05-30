@@ -41,9 +41,7 @@ cd tests
 molecule test -s container-basic   # or any scenario name below
 ```
 
-**CI scenarios:** `systemd-basic`, `systemd-full`, `systemd-uninstall`, `container-basic`, `container-full`, `container-uninstall`.
-
-**Local-only scenarios** (not in CI): `install-basic`, `install-uninstall`.
+**CI scenarios:** `systemd-basic`, `systemd-full`, `systemd-uninstall`, `container-basic`, `container-full`, `container-uninstall`, `install-basic`, `install-uninstall`.
 
 ### Cloud VM caveats
 

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Lint yaml and Ansible configs
         run: |
@@ -28,21 +28,24 @@ jobs:
           - container-basic
           - container-full
           - container-uninstall
+          - install-basic
+          - install-uninstall
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install molecule-docker pytest-testinfra ansible
+          pip install molecule-docker pytest-testinfra ansible-core==2.16.3
+          ansible-galaxy collection install community.docker community.general kubernetes.core
 
       - name: Start Docker
         run: |

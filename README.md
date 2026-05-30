@@ -8,7 +8,7 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/0x0I/basic-service?color=yellow)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-Configure and operate a basic cloud-native service: running anything from cypto blockchain clients to the immense app store of open-source ([Apache](https://projects.apache.org/projects.html), [CNCF](https://landscape.cncf.io/?group=projects-and-products&view-mode=grid) and beyond) services.
+Configure and operate a basic cloud-native service: running anything from crypto blockchain clients to the immense app store of open-source ([Apache](https://projects.apache.org/projects.html), [CNCF](https://landscape.cncf.io/?group=projects-and-products&view-mode=grid) and beyond) services.
 
 ## Requirements
 
@@ -23,8 +23,8 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 |   _setup_mode_   |  infrastructure provisioning setup mode (`container, k8s, systemd, install`)  |   `undefined`    |
 |     _name_      |                 name of service to deploy                  |    **required**    |
 |     _command_     |             Command and arguments to execute on startup              |    **required**    |
-|     _user_     |             service user to setup              |    `<operatoring-user>`    |
-|     _group_     |             service group to setup              |    `<operatoring-user>`    |
+|     _user_     |             service user to setup              |    `<operating-user>`    |
+|     _group_     |             service group to setup              |    `<operating-user>`    |
 |    _config_     |  configuration files associated with the service to mount  |       `{}`       |
 |   _config_env_   |  environment variables to set within the service runtime   |       `{}`       |
 |     _ports_     |          listening port information for a service          |       `{}`       |
@@ -32,7 +32,7 @@ Configure and operate a basic cloud-native service: running anything from cypto 
 |  _host_data_dir_  |   host directory for general deployment operations    |    ``    |
 |     _cpus_      |  CPU resources each deployed service can use (either percentage for systemd or cores for containers)   |      `100`       |
 |    _memory_     | available memory resources each deployed service can use |       `1G`       |
-| _restart_policy_ |                  service restart policy                  | `unless-stopped` |
+| _restart_policy_ |                  service restart policy                  | `on-failure` |
 |   _uninstall_   |    whether to remove installed service and artifacts    |     `false`      |
 
 ### Container
@@ -65,7 +65,7 @@ export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
 | :-------------: | :--------------------------------------------------------: | :--------------: |
 |     _helm_chart_path_     |             path to Helm chart to use for the service deployment/release              |    `../../helm`    |
 |     _helm_namespace_      |  Kubernetes namespace to deploy to   |      `default`       |
-|    _helm_values_path_     | file to load Helm chart values (see [here](./helm/README.md) for available values) |       `values.yml`       |
+|    _helm_values_path_     | file to load Helm chart values (see [here](./helm/README.md) for available values) |       `values.yaml`       |
 
 ## Containerized Apps
 - [O1 Containers](https://github.com/O1ahmad/containers)

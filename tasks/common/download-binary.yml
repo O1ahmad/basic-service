@@ -32,7 +32,7 @@
       ansible.builtin.command: >
         mv {{ binary_file_path }} {{ target_binary_path }}
       register: mv_output
-      changed_when: mv_output.rc != 0
+      changed_when: mv_output.rc == 0
       when: binary_file_name is not regex('\.(tar|tar\.gz|tgz|zip)$')
 
 - name: Check if the binary override file [{{ binary_file_name_override }}] exists at [{{ destination_directory }}]

@@ -45,10 +45,10 @@
   ansible.builtin.iptables:
     chain: INPUT
     protocol: tcp
-    destination_ports: "{{ ingress_list }}"
+    destination_ports: "{{ _ingress_list }}"
     jump: ACCEPT
     state: absent
-  when: ingress_list is defined and ingress_list | length > 0
+  when: _ingress_list is defined and _ingress_list | length > 0
 
 # --- Systemd Handlers ---
 - name: Remove temporary binary file
@@ -67,7 +67,7 @@
 - name: Remove extracted files or moved binary
   listen: Uninstall Service
   vars:
-    _derived_binary_name: "{{ binary_file_name_override | default((binary_url | default('', true)) | basename) }}"
+    _derived_binary_name: "{{ binary_file_name_override | default('', true) | default((binary_url | default('', true)) | basename, true) }}"
   ansible.builtin.file:
     path: "{{ destination_directory }}/{{ _derived_binary_name }}"
     state: absent

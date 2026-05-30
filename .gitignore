@@ -1,3 +1,6 @@
+# Local Ansible/Galaxy cache
+.ansible/
+
 # Ignore Python bytecode and cache directories
 __pycache__/
 *.py[cod]

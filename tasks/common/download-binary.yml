@@ -32,21 +32,21 @@
       ansible.builtin.command: >
         mv {{ binary_file_path }} {{ target_binary_path }}
       register: mv_output
-      changed_when: mv_output.rc != 0
+      changed_when: mv_output.rc == 0
       when: binary_file_name is not regex('\.(tar|tar\.gz|tgz|zip)$')
 
-- name: Check if the binary override file [{{ binary_file_name_override }}] exists at [{{ destination_directory }}]
+- name: Check if the binary override file [{{ binary_file_name_override | default('', true) }}] exists at [{{ destination_directory }}]
   ansible.builtin.stat:
     path: "{{ destination_directory }}/{{ binary_file_name_override }}"
   register: binary_override_file_stat
   when:
-    - binary_file_name_override is defined
+    - binary_file_name_override | default('', true) | length > 0
     - binary_url | default('', true) | length > 0
 
 - name: Fail if override binary file [{{ binary_file_name_override }}] is missing at [{{ destination_directory }}]
   ansible.builtin.fail:
     msg: "The binary file does not exist at {{ destination_directory }}/{{ binary_file_name_override }}."
   when:
-    - binary_file_name_override is defined
+    - binary_file_name_override | default('', true) | length > 0
     - binary_url | default('', true) | length > 0
     - not binary_override_file_stat.stat.exists

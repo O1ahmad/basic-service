@@ -12,13 +12,3 @@
     cpus: "{{ cpus }}"
     memory: "{{ memory }}"
     restart_policy: "{{ restart_policy }}"
-
-# Reset volume_list for subsequent iterations
-- name: Reset volume_list
-  ansible.builtin.set_fact:
-    volume_list: []
-
-# Reset port_list for subsequent iterations
-- name: Reset port_list
-  ansible.builtin.set_fact:
-    port_list: []

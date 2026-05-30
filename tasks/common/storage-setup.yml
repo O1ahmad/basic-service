@@ -19,7 +19,10 @@
     group: "{{ group | default(user) | default(ansible_user_id) }}"
     mode: "0755"
     recurse: false
-  with_dict: "{{ config }}"
+  loop: "{{ config | dict2items }}"
+  when: config | length > 0
+  loop_control:
+    label: "{{ item.key }}"
 
 - name: Generate local rendering of service config files {{ _config_file_names }}
   become: true
@@ -30,7 +33,10 @@
     src: "{{ item.value.sourcePath | default(omit) }}"
     owner: "{{ user | default(ansible_user_id) }}"
     group: "{{ group | default(user) | default(ansible_user_id) }}"
-  with_dict: "{{ config }}"
+  loop: "{{ config | dict2items }}"
+  when: config | length > 0
+  loop_control:
+    label: "{{ item.key }}"
 
 - name: Ensure existence of host data directories {{ _data_dirs_hostpaths }}
   become: true
@@ -40,4 +46,7 @@
     mode: "0755"
     owner: "{{ user | default(ansible_user_id) }}"
     group: "{{ group | default(user) | default(ansible_user_id) }}"
-  with_dict: "{{ data_dirs }}"
+  loop: "{{ data_dirs | dict2items }}"
+  when: data_dirs | length > 0
+  loop_control:
+    label: "{{ item.key }}"

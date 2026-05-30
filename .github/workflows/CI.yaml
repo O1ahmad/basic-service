@@ -20,6 +20,7 @@ jobs:
           ansible-lint --config-file ./tests/ansible-lint.yml .
   molecule:
     strategy:
+      fail-fast: false
       matrix:
         scenario:
           - systemd-basic

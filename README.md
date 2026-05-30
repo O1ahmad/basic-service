@@ -74,16 +74,13 @@ export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
 
 ## Dependencies
 
-```yaml
-roles:
-- name: ansible-role-systemd
-  url: git+https://github.com/O1ahmad/ansible-role-systemd.git
+Install role and collection requirements:
 
-# ansible-galaxy install git+https://github.com/O1ahmad/ansible-role-systemd.git
-
-collections:
-- name: community.docker
+```bash
+ansible-galaxy install -r requirements.yml
 ```
+
+See [requirements.yml](./requirements.yml) for the full list (includes `ansible-role-systemd` and `community.docker`).
 
 ## Example Playbook
 

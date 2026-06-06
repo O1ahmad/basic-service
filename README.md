@@ -68,7 +68,7 @@ export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
 |    _helm_values_path_     | file to load Helm chart values (see [here](./helm/README.md) for available values) |       `values.yaml`       |
 
 ## Containerized Apps
-- [O1 Containers](https://github.com/O1ahmad/containers)
+- [O1 Containers](https://github.com/O1labs/containers)
 - [Dockerhub](https://hub.docker.com/search?q=)
 - [Quay.io](https://quay.io/search)
 

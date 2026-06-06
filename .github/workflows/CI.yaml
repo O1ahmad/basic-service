@@ -27,6 +27,7 @@ jobs:
           - systemd-full
           - systemd-uninstall
           - container-basic
+          - container-binary
           - container-full
           - container-uninstall
           - install-basic

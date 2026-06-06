@@ -1,0 +1,20 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    ansible_user: root
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: container
+        name: jq-container
+        image: alpine:3.18
+        binary_url: https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
+        binary_file_name_override: jq-tool
+        destination_directory: /usr/local/bin
+        command: sh -c "/usr/local/bin/jq-tool --version && exec sleep infinity"
+        cpus: 0.5
+        memory: 128M
+        network_mode: bridge
+        restart_policy: on-failure

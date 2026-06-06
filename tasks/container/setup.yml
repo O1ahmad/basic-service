@@ -1,4 +1,8 @@
 ---
+- name: Download service binary
+  ansible.builtin.include_tasks: ../common/download-binary.yml
+  when: binary_url | default('', true) | length > 0
+
 - name: Start service container
   community.docker.docker_container:
     name: "{{ name }}"

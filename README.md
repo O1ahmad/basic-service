@@ -41,6 +41,11 @@ Configure and operate a basic cloud-native service: running anything from crypto
 | :-------------: | :--------------------------------------------------------: | :--------------: |
 |     _image_     |             service container image to deploy              |    ` `    |
 |     _network_mode_     |             container network to attach ([more info](https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-network_mode))              |    `bridge `    |
+|     _binary_url_     |             URL of the binary file or archive to download and bind-mount into the container              |    ` `    |
+|     _binary_file_name_override_     |             Override the binary file name after moving it to the destination directory              |    ` `    |
+|    _binary_strip_components_     | Strip NUMBER leading components/directories from file names on extraction | `0` |
+|     _destination_directory_     |             host directory where the binary file will be placed after downloading/extracting              |    `/usr/local/bin`    |
+|     _binary_app_path_     |             in-container mount path for the downloaded binary directory              |    `<destination_directory>`    |
 
 ### Systemd
 
@@ -183,6 +188,42 @@ See [requirements.yml](./requirements.yml) for the full list (includes `ansible-
         cpus: 0.5
         memory: 5g
         network_mode: host
+```
+
+- Run a downloaded binary inside a container (e.g. Prometheus from a release archive):
+
+```yaml
+- name: Configure Prometheus in a container
+  hosts: Monitoring
+  become: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: container
+        name: prometheus
+        image: debian:bookworm-slim
+        binary_url: https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz
+        binary_strip_components: 1
+        binary_file_name_override: prometheus
+        destination_directory: /usr/local/bin
+        command: >
+          /usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml
+          --storage.tsdb.path=/prometheus --web.listen-address=0.0.0.0:9090
+        ports:
+          prometheus:
+            ingressPort: 9090
+            servicePort: 9090
+        host_data_dir: /var/lib/prometheus
+        config:
+          prometheus.yml:
+            destinationPath: /etc/prometheus/prometheus.yml
+            data: |
+              global:
+                scrape_interval: 15s
+        data_dirs:
+          prometheus-data:
+            hostPath: /var/lib/prometheus/data
+            appPath: /prometheus
 ```
 
 - Install a tool (e.g. `curl`):

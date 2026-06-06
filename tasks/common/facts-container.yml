@@ -24,6 +24,17 @@
   loop_control:
     label: "{{ item.key }}"
 
+- name: Add binary destination directory to container volume list
+  ansible.builtin.set_fact:
+    _volume_list: >-
+      {{
+        _volume_list +
+        [
+          destination_directory + ':' + (binary_app_path | default(destination_directory))
+        ]
+      }}
+  when: binary_url | default('', true) | length > 0
+
 - name: Determine service container port list
   ansible.builtin.set_fact:
     _port_list: >-

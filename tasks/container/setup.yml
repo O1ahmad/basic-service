@@ -4,15 +4,19 @@
   when: binary_url | default('', true) | length > 0
 
 - name: Start service container
-  community.docker.docker_container:
-    name: "{{ name }}"
-    image: "{{ image }}"
-    user: root
-    command: "{{ command | default(omit) }}"
-    env: "{{ config_env }}"
-    published_ports: "{{ _port_list }}"
-    network_mode: "{{ network_mode }}"
-    volumes: "{{ _volume_list }}"
-    cpus: "{{ cpus }}"
-    memory: "{{ memory }}"
-    restart_policy: "{{ restart_policy }}"
+  community.docker.docker_container: >-
+    {{
+      {
+        'name': name,
+        'image': image,
+        'user': 'root',
+        'env': config_env,
+        'published_ports': _port_list,
+        'network_mode': network_mode,
+        'volumes': _volume_list,
+        'cpus': cpus,
+        'memory': memory,
+        'restart_policy': restart_policy,
+      }
+      | combine({'command': command} if command is defined and command | length > 0 else {})
+    }}

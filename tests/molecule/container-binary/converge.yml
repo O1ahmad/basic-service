@@ -9,7 +9,7 @@
       vars:
         setup_mode: container
         name: jq-container
-        image: alpine:3.18
+        image: debian:bookworm-slim
         binary_url: https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
         binary_file_name_override: jq-tool
         destination_directory: /opt/binaries

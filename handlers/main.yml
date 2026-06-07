@@ -84,4 +84,6 @@
     name: "{{ name }}"
     state: absent
     release_namespace: "{{ helm_namespace }}"
+    kubeconfig: "{{ lookup('env', 'KUBECONFIG') | default(omit, true) }}"
+    context: "{{ lookup('env', 'KUBE_CONTEXT') | default(omit, true) }}"
   when: setup_mode == 'k8s'

@@ -41,7 +41,11 @@ cd tests
 molecule test -s container-basic   # or any scenario name below
 ```
 
-**CI scenarios:** `systemd-basic`, `systemd-full`, `systemd-uninstall`, `container-basic`, `container-full`, `container-uninstall`, `install-basic`, `install-uninstall`.
+**CI scenarios:** `systemd-basic`, `systemd-full`, `systemd-uninstall`, `container-basic`, `container-binary`, `container-binary-service`, `container-full`, `container-uninstall`, `install-basic`, `install-uninstall`, `k8s-basic`.
+
+`container-binary` exercises bind-mount mechanics with a short-lived `jq` binary. `container-binary-service` deploys a long-running daemon from a downloaded tarball (Prometheus) with config, data, ports, and readiness checks. `k8s-basic` uses the delegated driver with a local [kind](https://kind.sigs.k8s.io/) cluster to test `setup_mode: k8s` end-to-end.
+
+**Helm validation:** `./tests/helm-validate.sh` (also runs in the lint CI job).
 
 ### Cloud VM caveats
 
@@ -66,4 +70,4 @@ Exercises the same stack as `setup_mode: container` (the role does not set `cgro
 
 ## Kubernetes / Helm
 
-`setup_mode: k8s` is not in CI. Requires a cluster, `KUBECONFIG`, `KUBE_CONTEXT`, Helm, and `kubernetes.core` (see `README.md`, `helm/README.md`).
+`k8s-basic` provisions kind on the CI runner (Docker required) and sets `KUBECONFIG` for the role. Chart-only validation also runs via `./tests/helm-validate.sh`. Manual deploys still need `KUBECONFIG`, `KUBE_CONTEXT`, Helm, and `kubernetes.core` (see `README.md`, `helm/README.md`).

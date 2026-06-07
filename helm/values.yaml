@@ -1,7 +1,8 @@
 name: foo-service
 commonName: foo-service.foo
 namespace: foo
-image:
+clusterName: foo-cluster
+image: nginx:1.27
 command: []
 args: []
 dockercfg:
@@ -16,9 +17,38 @@ minReplicas: 1
 maxReplicas: 3
 createNamespace: true
 
+hpa:
+  enabled: false
+  targetCPUUtilizationPercentage: 50
+  # targetMemoryUtilizationPercentage: 80
+  metrics: []
+
 env:
   config:
     PLACEHOLDER: placeholder
+
+secretEnv: {}
+extraEnv: []
+
+resources: {}
+containerSecurityContext: {}
+
+livenessProbe: {}
+readinessProbe: {}
+startupProbe: {}
+
+# Deprecated: use livenessProbe / readinessProbe instead.
+livenessProbeRPCDaemon: {}
+readinessProbeRPCDaemon: {}
+
+ingress:
+  enabled: false
+
+serviceMonitor:
+  enabled: false
+  port: http
+  path: /metrics
+  interval: 30s
 
 # see: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container
 initContainers: {}
@@ -72,13 +102,16 @@ serviceRoles: {}
 
 # see: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
 deployStatefulSet: false
+podManagementPolicy: OrderedReady
 statefulSetOptions:
+  name: data
+  mountPath: /data
   pvcName: ebs
   pvcAccessMode: ReadWriteOnce
   pvcStorageClass: gp3-ext4
   pvcStorageCapacity: 1Gi
 
-deployStategy: {}
+deployStrategy: {}
 # [Deployment]
 # strategy:
 #   type: RollingUpdate
@@ -87,6 +120,12 @@ deployStategy: {}
 # [StatefulSet]
 # updateStrategy:
 #   type: RollingUpdate
+updateStrategy: {}
+
+nodeSelector: {}
+affinity: {}
+tolerations: []
+terminationGracePeriodSeconds: 30
 
 storageClass:
   []
@@ -125,3 +164,6 @@ persistentVolume:
   #   driver: efs.csi.aws.com
   #   volumeHandle: "fs-123456789"
   #   subPath: "mount2"
+
+# Deprecated: use hpa.targetCPUUtilizationPercentage instead.
+targetCPUUtilizationPercentage: 50

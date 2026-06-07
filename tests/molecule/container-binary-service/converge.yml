@@ -1,0 +1,43 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    ansible_user: root
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: container
+        name: binary-service-container
+        image: debian:bookworm-slim
+        binary_url: https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz
+        binary_strip_components: 1
+        binary_file_name_override: prometheus
+        destination_directory: /tmp/molecule-service-binary
+        binary_app_path: /usr/local/bin
+        command: >
+          /usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml
+          --storage.tsdb.path=/prometheus --web.listen-address=0.0.0.0:9090
+        cpus: 0.5
+        memory: 512M
+        network_mode: bridge
+        ports:
+          service:
+            ingressPort: 9090
+            servicePort: 9090
+        host_data_dir: /test/mnt
+        config:
+          prometheus.yml:
+            destinationPath: /etc/prometheus/prometheus.yml
+            data: |
+              global:
+                scrape_interval: 15s
+              scrape_configs:
+                - job_name: prometheus
+                  static_configs:
+                    - targets: ["localhost:9090"]
+        data_dirs:
+          service-data:
+            hostPath: /test/mnt/data
+            appPath: /prometheus
+        restart_policy: on-failure

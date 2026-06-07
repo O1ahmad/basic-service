@@ -1,0 +1,40 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: ../requirements.yml
+driver:
+  name: default
+  options:
+    managed: false
+platforms:
+  - name: localhost
+    connection: local
+provisioner:
+  name: ansible
+  connection_options:
+    ansible_connection: local
+  playbooks:
+    prepare: ../prepare-kind.yml
+    cleanup: ../cleanup-kind.yml
+    destroy: ../cleanup-kind.yml
+  env:
+    ANSIBLE_ROLES_PATH: "../../../../"
+    ANSIBLE_ALLOW_BROKEN_CONDITIONALS: "True"
+    KUBECONFIG: /tmp/molecule-k8s-kubeconfig
+verifier:
+  name: testinfra
+  directory: ./tests
+scenario:
+  name: k8s-basic
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify
+    - cleanup
+    - destroy

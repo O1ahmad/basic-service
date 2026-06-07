@@ -18,6 +18,11 @@ jobs:
           pip install ansible-lint==24.12.2 yamllint==1.35.1 ansible-core==2.16.3
           yamllint --config-file ./tests/yaml-lint.yml .
           ansible-lint --config-file ./tests/ansible-lint.yml .
+
+      - name: Validate Helm chart
+        run: |
+          chmod +x ./tests/helm-validate.sh
+          ./tests/helm-validate.sh
   molecule:
     strategy:
       fail-fast: false
@@ -28,10 +33,12 @@ jobs:
           - systemd-uninstall
           - container-basic
           - container-binary
+          - container-binary-service
           - container-full
           - container-uninstall
           - install-basic
           - install-uninstall
+          - k8s-basic
     runs-on: ubuntu-latest
 
     steps:
@@ -59,4 +66,5 @@ jobs:
           sudo systemctl enable docker
 
       - name: Run Molecule Test
+        timeout-minutes: 20
         run: cd tests && molecule test -s ${{ matrix.scenario }}

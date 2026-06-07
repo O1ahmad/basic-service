@@ -14,9 +14,7 @@
         binary_file_name_override: jq-tool
         destination_directory: /opt/binaries
         binary_app_path: /opt/binaries
-        command:
-          - /bin/sleep
-          - infinity
+        command: sleep infinity
         cpus: 0.5
         memory: 128M
         network_mode: bridge

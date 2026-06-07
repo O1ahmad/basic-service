@@ -17,7 +17,8 @@ def test_binary_mounted_in_container(host):
     mounts = container.inspect()["Mounts"]
     binary_mounts = [m for m in mounts if m.get("Destination") == "/opt/binaries"]
     assert len(binary_mounts) == 1, "Binary directory is not mounted in the container."
-    assert binary_mounts[0]["Source"] == "/opt/binaries"
+    assert binary_mounts[0]["Type"] == "bind"
+    assert binary_mounts[0]["RW"] is True
 
 
 def test_binary_executes_in_container(host):

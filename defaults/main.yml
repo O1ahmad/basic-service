@@ -66,6 +66,7 @@ uninstall: false
 ### Container ###
 image:
 network_mode: bridge
+# binary_app_path: /usr/local/bin
 _volume_list: []
 _port_list: []
 

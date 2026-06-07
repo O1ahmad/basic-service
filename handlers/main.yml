@@ -59,7 +59,7 @@
     path: "/tmp/{{ _derived_binary_basename }}"
     state: absent
   when:
-    - setup_mode in ['systemd', 'install']
+    - setup_mode in ['systemd', 'install', 'container']
     - binary_url is defined
     - _derived_binary_basename | length > 0
     - _derived_binary_basename != "."
@@ -72,7 +72,7 @@
     path: "{{ destination_directory }}/{{ _derived_binary_name }}"
     state: absent
   when:
-    - setup_mode in ['systemd', 'install']
+    - setup_mode in ['systemd', 'install', 'container']
     - destination_directory is defined
     - _derived_binary_name | length > 0
     - _derived_binary_name != "."

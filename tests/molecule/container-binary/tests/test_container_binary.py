@@ -5,7 +5,7 @@ def test_container_running(host):
 
 
 def test_binary_downloaded_on_host(host):
-    binary = host.file("/opt/binaries/jq-tool")
+    binary = host.file("/tmp/molecule-binary/jq-tool")
     assert binary.exists, "The service binary does not exist on the host."
     assert binary.is_file, "The service binary is not a regular file."
     assert binary.mode & 0o111, "The service binary is not executable."

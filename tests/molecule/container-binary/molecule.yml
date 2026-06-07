@@ -10,6 +10,8 @@ platforms:
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      # Share binary staging dir with the host Docker daemon (socket is host-mounted).
+      - /tmp/molecule-binary:/tmp/molecule-binary
 provisioner:
   name: ansible
   playbooks:

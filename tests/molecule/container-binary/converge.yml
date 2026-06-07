@@ -9,10 +9,10 @@
       vars:
         setup_mode: container
         name: jq-container
-        image: debian:bookworm-slim
+        image: alpine:3.18
         binary_url: https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64
         binary_file_name_override: jq-tool
-        destination_directory: /opt/binaries
+        destination_directory: /tmp/molecule-binary
         binary_app_path: /opt/binaries
         command: sleep infinity
         cpus: 0.5

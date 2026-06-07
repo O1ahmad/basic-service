@@ -68,9 +68,14 @@ export KUBE_CONTEXT=<context-within-the-kubeconfig-to-use>
 
 |       var       |                        description                         |     default      |
 | :-------------: | :--------------------------------------------------------: | :--------------: |
-|     _helm_chart_path_     |             path to Helm chart to use for the service deployment/release              |    `../../helm`    |
-|     _helm_namespace_      |  Kubernetes namespace to deploy to   |      `default`       |
-|    _helm_values_path_     | file to load Helm chart values (see [here](./helm/README.md) for available values) |       `values.yaml`       |
+|     _helm_chart_path_     |             path to Helm chart to use for the service deployment/release              |    `helm` (resolved relative to the role)    |
+|     _helm_namespace_      |  Kubernetes namespace to deploy to (also rendered into chart values)   |      `default`       |
+|    _helm_values_path_     | optional Helm values overlay file merged after rendered role values |       `""`       |
+| _helm_render_values_from_role_ | map common role vars (`image`, `config`, `ports`, `cpus`, `memory`, etc.) into Helm values | `true` |
+| _helm_create_namespace_ | create the target namespace during Helm install | `true` |
+| _helm_wait_ / _helm_atomic_ / _helm_timeout_ | Helm install safety controls | `true` / `true` / `10m` |
+
+With `setup_mode: k8s`, the role renders Helm values from the same variables used by `container`, `systemd`, and `install` modes, then deploys the bundled chart. Set `helm_render_values_from_role: false` to use only `helm_values_path`.
 
 ## Containerized Apps
 - [O1 Containers](https://github.com/O1labs/containers)

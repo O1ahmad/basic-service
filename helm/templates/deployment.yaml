@@ -1,101 +1,39 @@
-{{- if not .Values.deployStatefulSet}}
+{{- if not .Values.deployStatefulSet }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{template "basic-service.name" .}}-deployment
-  namespace: {{.Values.namespace}}
+  name: {{ template "basic-service.name" . }}-deployment
+  namespace: {{ .Values.namespace }}
   labels:
-    {{- include "basic-service.labels" $ | indent 8 }}
+    app: {{ template "basic-service.name" . }}
+    {{- with .Values.labels }}
+    {{- include "basic-service.labels" $ | nindent 4 }}
+    {{- end }}
+  {{- with .Values.annotations }}
   annotations:
-    {{- tpl (toYaml .Values.annotations) . | nindent 4 }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
 spec:
-  replicas: {{int .Values.minReplicas | default 0}}
+  replicas: {{ int .Values.minReplicas | default 1 }}
   selector:
     matchLabels:
-      app: {{template "basic-service.name" .}}
-  {{- if .Values.deployStrategy }}
-    {{- toYaml .Values.deployStrategy | nindent 2 }}
+      {{- include "basic-service.selectorLabels" . | nindent 6 }}
+  {{- with .Values.deployStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   template:
     metadata:
       labels:
-        app: {{template "basic-service.name" .}}
-        {{- if .Values.labels }}
-          {{- include "basic-service.labels" $ | indent 8 }}
+        {{- include "basic-service.selectorLabels" . | nindent 8 }}
+        {{- with .Values.labels }}
+        {{- include "basic-service.labels" $ | nindent 8 }}
         {{- end }}
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-        {{- tpl (toYaml .Values.annotations) . | nindent 4 }}
+        {{- with .Values.annotations }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
     spec:
-      {{- if or .Values.dockercfg .Values.dockercfgOverride}}
-      imagePullSecrets:
-      - name: {{default (include "basic-service.name" .) .Values.dockercfgOverride}}-dockercfg
-      {{- end}}
-      volumes:
-      {{- range  $volumeName, $volumeValue := .Values.extraVolumes }}
-        {{- toYaml $volumeValue | nindent 8}}
-      {{- end }}
-      {{- range  $volumeName, $volumeValue := .Values.volumesFromConfigMaps }}
-        - name: {{$volumeName}}
-          configMap:
-            name: {{template "basic-service.name" $}}-{{$volumeValue.configMapName}}
-      {{- end }}
-      {{- if .Values.serviceAccountName }}
-      serviceAccountName: {{.Values.serviceAccountName }}
-      {{- end }}
-      {{- if .Values.initContainers }}
-      initContainers:
-        {{- range  $containerName, $containerValue := .Values.initContainers }}
-          {{- toYaml $containerValue | nindent 6}}
-        {{- end }}
-      {{- end }}
-      containers:
-      - name: {{template "basic-service.name" .}}
-        image: {{.Values.image}}
-        {{- if .Values.command }}
-        command: {{ toYaml .Values.command | nindent 8 }}
-        {{- end }}
-        {{- if .Values.args }}
-        args: {{ toYaml .Values.args | nindent 8 }}
-        {{- end }}
-        securityContext:
-        {{- toYaml .Values.containerSecurityContext | nindent 12 }}
-        resources:
-        {{- toYaml .Values.resources | nindent 12 }}
-        livenessProbe:
-        {{- toYaml .Values.livenessProbeRPCDaemon | nindent 12 }}
-        readinessProbe:
-        {{- toYaml .Values.readinessProbeRPCDaemon | nindent 12 }}
-        volumeMounts:
-        {{- range  $mountName, $mountValue := .Values.extraVolumeMounts }}
-          {{- toYaml $mountValue | nindent 10}}
-        {{- end }}
-        env:
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
-        {{- range $key, $value := .Values.secretEnv }}
-        - name: {{ $key }}
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "basic-service.name" $ }}-env
-              key: {{ $key }}
-        {{- end }}
-        {{- if .Values.extraEnv }}
-          {{- toYaml .Values.extraEnv | nindent 12 }}
-        {{- end }}
-      {{- if .Values.extraContainers }}
-        {{- range  $key, $value := .Values.extraContainers }}
-          {{- tpl (toYaml $value) $ | nindent 6}}
-        {{- end }}
-      {{- end }}
-      nodeSelector:
-        {{- toYaml .Values.nodeSelector | nindent 8 }}
-      affinity:
-        {{- toYaml .Values.affinity | nindent 8 }}
-      tolerations:
-        {{- toYaml .Values.tolerations | nindent 8 }}
-      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
-        {{- end}}
+      {{- include "basic-service.podSpec" . | nindent 6 }}
 {{- end }}

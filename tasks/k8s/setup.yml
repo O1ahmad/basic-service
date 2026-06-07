@@ -30,10 +30,19 @@
   args:
     creates: /usr/local/bin/helm
 
+- name: Render Helm values from role variables
+  ansible.builtin.include_tasks: render-values.yml
+
 - name: Deploy Helm chart
   kubernetes.core.helm:
     name: "{{ name }}"
-    chart_ref: "{{ helm_chart_path }}"
+    chart_ref: "{{ _helm_chart_ref }}"
     release_namespace: "{{ helm_namespace }}"
-    values_files:
-      - "{{ helm_values_path }}"
+    values_files: "{{ _helm_values_files }}"
+    wait: "{{ helm_wait | default(true) | bool }}"
+    atomic: "{{ helm_atomic | default(true) | bool }}"
+    timeout: "{{ helm_timeout | default('10m') }}"
+    create_namespace: "{{ helm_create_namespace | default(true) | bool }}"
+    kubeconfig: "{{ lookup('env', 'KUBECONFIG') | default(omit, true) }}"
+    context: "{{ lookup('env', 'KUBE_CONTEXT') | default(omit, true) }}"
+    update_repo_cache: false

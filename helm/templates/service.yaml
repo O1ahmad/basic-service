@@ -12,7 +12,7 @@ metadata:
 spec:
   type: {{.Values.serviceType}}
   ports:
-  - name: tcp-{{template "basic-service.name" .}}
+  - name: {{ if .Values.serviceMonitor.enabled }}{{ .Values.serviceMonitor.port | default "http" }}{{ else }}tcp-{{ template "basic-service.name" . }}{{ end }}
     port: {{.Values.servicePort}}
     targetPort: {{.Values.serviceTargetPort}}
     protocol: TCP

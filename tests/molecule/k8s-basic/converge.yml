@@ -1,0 +1,21 @@
+---
+- name: Converge
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  roles:
+    - role: basic-service
+      vars:
+        setup_mode: k8s
+        name: test-k8s-service
+        image: nginx:1.27-alpine
+        helm_namespace: molecule-k8s
+        helm_create_namespace: true
+        k8s_common_name: test-k8s-service.local
+        ports:
+          web:
+            ingressPort: 80
+            servicePort: 80
+        cpus: 0.25
+        memory: 128M
+        k8s_health_check_path: /
